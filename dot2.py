@@ -729,7 +729,6 @@ class Dot2:
 
     def pan(self, val):
         self.send({"requestType": "encoder", "name": "PAN", "value": val, "session": self.session_id, "maxRequests": 0})
-
     def tilt(self, val):
         self.send({"requestType": "encoder", "name": "TILT", "value": val, "session": self.session_id, "maxRequests": 0})
 
