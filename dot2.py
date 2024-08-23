@@ -4,7 +4,6 @@ import time
 import websocket
 import threading
 from mido import Message
-import mido
 import tkinter as tk
 from tkinter import simpledialog, messagebox
 import os
@@ -503,7 +502,7 @@ def read_midi_messages(console=None):
                                     console.command(f"Swop Off Executor {page+1}.{i+201}")
                                     send_note(note, 0)
     except Exception as e:
-        print(f"Fehler beim Öffnen des Lese Ports: {e}")
+        print(f"1 Fehler beim Öffnen des Lese Ports: {e}")
 
 def send_note(note, velocity, channel=0):
     """Sendet eine Note."""
@@ -512,7 +511,8 @@ def send_note(note, velocity, channel=0):
             msg = Message("note_on", note=note, velocity=velocity)
             outport.send(msg)
     except Exception as e:
-        print(f"Fehler beim Öffnen des Ports (Send Note): {e}")
+        print(f"2 Fehler beim Öffnen des Ports (Send Note): {e}")
+        send_note(note, velocity, channel)
 def send_control_change(control, value, channel=0):
     """Sendet eine Control Change Nachricht an den angegebenen MIDI-Ausgangsport."""
     try:
@@ -520,7 +520,8 @@ def send_control_change(control, value, channel=0):
             msg = Message('control_change', control=control, value=value, channel=channel)
             outport.send(msg)
     except Exception as e:
-        print(f"Fehler beim Öffnen des Ports (Send CC): {e}")
+        print(f"3 Fehler beim Öffnen des Ports (Send CC): {e}")
+        send_control_change(control, value, channel)
 
 def send_sysex(sysex):
     try:
@@ -528,7 +529,8 @@ def send_sysex(sysex):
             msg = Message.from_bytes(sysex)
             outport.send(msg)
     except Exception as e:
-        print(f"Fehler beim Öffnen des Ports (Sende Sysex): {e}")
+        print(f"4 Fehler beim Öffnen des Ports (Sende Sysex): {e}\tSysex: {sysex}")
+        send_sysex(sysex)
 
 def time_to_sysex():
     def update_time():
@@ -711,7 +713,7 @@ class Dot2:
                         button1[i] = new_value
 
     def on_error(self, ws, error):
-        print(f"Fehler: {error}")
+        print(f"5 Fehler: {error}")
 
     def on_close(self, ws, close_status_code, close_msg):
         print("### Verbindung geschlossen ###")
