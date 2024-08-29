@@ -1,3 +1,4 @@
+You can also have a look on the [GERMAN](https://github.com/hellerqr/X-Touch-for-MA-Dot2/blob/master/READMEDE.md) instruction.
 # Acknowledgements
 
 Thanks to [ArtGateOne](https://github.com/ArtGateOne) for the software [dot2bcf2000](https://github.com/ArtGateOne/dot2bcf2000), which was an inspiration for the code.
