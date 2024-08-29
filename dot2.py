@@ -26,6 +26,8 @@ last_msg = time.time()
 page = 0
 request = 0
 counter = 0
+in_port = "X-Touch 0"
+out_port = "X-Touch 1"
 commands = {40: 'PresetType "Dimmer"', 41: 'PresetType "Position"', 42: 'PresetType "Gobo"', 43: 'PresetType "Color"', 44: 'PresetType "Beam"', 45: 'PresetType "Control"'}
 clear = False
 store = False
@@ -221,6 +223,8 @@ def decrement_page():
 
 
 def read_midi_messages(console=None):
+    global in_port
+    global out_port
     global page
     global blackout
     global last_msg
@@ -234,7 +238,7 @@ def read_midi_messages(console=None):
     global fader_color
     """Liest MIDI-Nachrichten vom angegebenen Port."""
     try:
-        with (mido.open_input("X-Touch 0") as inport):
+        with (mido.open_input(in_port) as inport):
             for msg in inport:
                 if msg.type == "control_change":
                     handle_control_change(msg.control, msg.value, console)
@@ -248,7 +252,7 @@ def send_note(note, velocity, channel=0, retries=3):
     attempt = 0
     while attempt < retries:
         try:
-            with mido.open_output("X-Touch 1") as outport:
+            with mido.open_output(out_port) as outport:
                 msg = Message("note_on", note=note, velocity=velocity)
                 outport.send(msg)
                 return  # Erfolgreich gesendet, Funktion beenden
@@ -263,7 +267,7 @@ def send_control_change(control, value, channel=0, retries=3):
     attempt = 0
     while attempt < retries:
         try:
-            with mido.open_output("X-Touch 1") as outport:
+            with mido.open_output(out_portE) as outport:
                 msg = Message('control_change', control=control, value=value, channel=channel)
                 outport.send(msg)
                 return  # Erfolgreich gesendet, Funktion beenden
