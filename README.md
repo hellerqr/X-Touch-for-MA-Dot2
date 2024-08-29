@@ -43,11 +43,11 @@ Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-k
 - **Encoders:**
   - By clicking on the encoder, you can choose between two step sizes.
 - **Fader Bank:**
-  - <: Previous Page
-  - >: Next Page
+  - `<`: Previous Page
+  - `>`: Next Page
 - **Channel:**
-  - <: Previous
-  - >: Next
+  - `<`: Previous
+  - `>`: Next
 - **Drop: Delete**
   - Click on "Drop".
   - Place your finger on the fader you want to delete.
