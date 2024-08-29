@@ -87,3 +87,10 @@
 <h1>Simple Bug Fixing</h1>
 <h2>"X-Touch 1" Or "X-Touch 0" is not a valid MIDI out-/input</h2>
 Please run midi.py and look to the labels of the Behringer X-Touch device
+<h2>Any other Error</h2>
+<ul>
+  <li>Please try to restart your full system</li>
+  <li>Fill an Issue with a screenshot and discription of the error</li>
+</ul>
+<h1>You want to use another button?</h1>
+Create an issue with the note of the button and describe the desired function
