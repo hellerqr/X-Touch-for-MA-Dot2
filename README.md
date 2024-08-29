@@ -1,3 +1,6 @@
+<h1>Credits</h1>
+Thanks to <a href="https://github.com/ArtGateOne">ArtGateOne</a> for the <a href="https://github.com/ArtGateOne/dot2bcf2000">dot2bcf2000</a> software, which was the inspiration for the code.
+Thanks to the Förderverein des Gymnasium Köln Pesch for taking over the acquisition costs of the Behringer X Touch for use in the AG für Veranstaltungstechnik.
 <h1>How to make the software ready for operation</h1>
 <ul>
   <li>Connect Behringer X-Touch via USB</li>
