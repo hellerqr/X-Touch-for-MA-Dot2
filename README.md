@@ -83,3 +83,7 @@
   <li>Undo: Oops</li>
   <li>Enter: Please</li>
 </ul>
+
+<h1>Simple Bug Fixing</h1>
+<h2>"X-Touch 1" Or "X-Touch 0" is not a valid MIDI out-/input</h2>
+Please run midi.py and look to the labels of the Behringer X-Touch device
