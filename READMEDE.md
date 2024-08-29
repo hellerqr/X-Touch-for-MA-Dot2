@@ -43,11 +43,11 @@ Danke an den Förderverein des [Gymnasium Köln Pesch](https://gymnasium-koeln-p
 - **Encoder:**
   - Durch Klicken auf den Encoder kann man zwischen zwei Schrittgrößen wählen.
 - **Faderbank:**
-  - `<`: Vorherige Seite
-  - `>`: Nächste Seite
+  - `<`: Page +
+  - `>`: Page -
 - **Channel:**
-  - `<`: Vorheriger
-  - `>`: Nächster
+  - `<`: Previous
+  - `>`: Next
 - **Drop: Löschen**
   - Auf "Drop" klicken.
   - Finger auf den zu löschenden Fader legen.
@@ -62,16 +62,16 @@ Danke an den Förderverein des [Gymnasium Köln Pesch](https://gymnasium-koeln-p
   - Finger auf den Fader legen, auf dem gespeichert werden soll **ODER**
   - Eine Taste von F1 bis F8 auswählen, um die ausgewählten Lampen zu einer Gruppe zu speichern.
 - **Funktion:**
-  - F1 - F8: Gruppe 1 - Gruppe 8
+  - F1 - F8: Group 1 - Group 8
 - **"Joystick"-Tasten:**
-  - Oben: Hoch
-  - Unten: Runter
-  - Links: Vorherige
-  - Rechts: Nächste
-  - Mitte: Setzen
+  - Oben: Up
+  - Unten: Down
+  - Links: Previos
+  - Rechts: Next
+  - Mitte: Set
 - **Cancel: Clear (Zweimal drücken, wie bei der Clear-Taste)**
-- **Undo: Rückgängig (Oops)**
-- **Enter: Bitte**
+- **Undo: Oops**
+- **Enter: Please**
 
 # Einfache Fehlerbehebung
 
