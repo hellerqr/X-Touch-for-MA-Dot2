@@ -4,13 +4,13 @@ Thanks to [ArtGateOne](https://github.com/ArtGateOne) for the software [dot2bcf2
 
 Thanks to [Linus Groschke](https://github.com/linusgke) for the software [pyMAdot2](https://github.com/linusgke/pyMAdot2), which also served as an inspiration for the code.
 
-Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-koeln-pesch.de/) for covering the acquisition costs of the Behringer X-Touch for use in the "AG für Veranstaltungstechnik".
+Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-koeln-pesch.de/) for covering the acquisition costs of the Behringer X-Touch for use in the `AG für Veranstaltungstechnik`.
 
 # How to Make the Software Ready for Operation
 
 1. Connect the Behringer X-Touch via USB.
-2. Start Dot2 on your PC.
-3. Start dot2.py.
+2. Start `Dot2 on pc`.
+3. Start `dot2.py`.
 
 # Functions of the Software
 
@@ -77,7 +77,7 @@ Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-k
 
 ## "X-Touch 1" or "X-Touch 0" is not a valid MIDI input/output
 
-Please run midi.py and check the labels of the Behringer X-Touch device. Change the value of "in_port" and "out_port" in line 29 and 30 in dot2.py.
+Please run `midi.py` and check the labels of the Behringer X-Touch device. Change the value of "in_port" and "out_port" in `line 29` and `30` in `dot2.py`.
 
 ## Any Other Error
 
