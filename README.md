@@ -4,7 +4,7 @@ Thanks to [ArtGateOne](https://github.com/ArtGateOne) for the software [dot2bcf2
 
 Thanks to [Linus Groschke](https://github.com/linusgke) for the software [pyMAdot2](https://github.com/linusgke/pyMAdot2), which also served as an inspiration for the code.
 
-Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-koeln-pesch.de/) for covering the acquisition costs of the Behringer X-Touch for use in the `AG für Veranstaltungstechnik`.
+Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-koeln-pesch.de/) for covering the acquisition costs of the Behringer X-Touch for use in the "AG für Veranstaltungstechnik".
 
 # How to Make the Software Ready for Operation
 
