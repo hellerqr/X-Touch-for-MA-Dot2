@@ -42,13 +42,13 @@
     </ul>
   <li>Faderbank:</li>
   <ul>
-    <li><: Privios Page</li>
-    <li>>: Next Page</li>
+    <li>`<`: Privios Page</li>
+    <li>`>`: Next Page</li>
   </ul>
   <li>Channel</li>
   <ul>
-    <li><: Privios</li>
-    <li>>: Next</li>
+    <li>`<`: Privios</li>
+    <li>`>`: Next</li>
   </ul>
   <li>Drop: Delete</li>
   <ul>
