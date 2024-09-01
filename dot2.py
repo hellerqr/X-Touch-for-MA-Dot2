@@ -8,6 +8,7 @@ import tkinter as tk
 from tkinter import simpledialog, messagebox
 import os
 from midi import *
+import actions
 # Zustand der Tasten und Fader
 tasten = [False for _ in range(127)]
 fader_values = [0 for _ in range(8)]
@@ -26,7 +27,6 @@ last_msg = time.time()
 page = 0
 request = 0
 counter = 0
-commands = {40: 'PresetType "Dimmer"', 41: 'PresetType "Position"', 42: 'PresetType "Gobo"', 43: 'PresetType "Color"', 44: 'PresetType "Beam"', 45: 'PresetType "Control"'}
 clear = False
 store = False
 select_for_lable = False
@@ -58,336 +58,214 @@ def read_midi_messages(console=None):
     try:
         with (mido.open_input("X-Touch 0") as inport):
             for msg in inport:
+
                 if msg.type == "control_change":
                     value = msg.value
                     control = msg.control
-                    for i in range(0, 8):
-                        if control == 70 + i and console:
-                            # Überprüfe, ob der Wert sich tatsächlich geändert hat
-                            if fader_values[i] != value:
-                                fader_values[i] = value
-                                last_fader_change[i] = time.time()
-                                console.fade(i, value / 127)
-                    if control == 78 and console: ## MAIN
-                        console.specialmaster("2.1", str(int((value/127)*100)))
-                        if str(int((value/127)*100)) != "100":
-                            send_note(57, 64)
-                            blackout = True
-                        else:
-                            blackout = False
-                            send_note(57, 0)
-                    if control == 80 and console: ## Drehregler 1
-                        if value < 64:
-                            console.pan(-speed["pan"])
-                        if value > 64:
-                            console.pan(speed["pan"])
-                        send_control_change(80, 64)
-                    if control == 81 and console: ## Drehregler 2
-                        if value < 64:
-                            console.tilt(-speed["tilt"])
-                        if value > 64:
-                            console.tilt(speed["tilt"])
-                        send_control_change(81, 64)
-                    if control == 82 and console: ## Drehregler 3
-                        if value < 64:
-                            console.dim(-speed["dim"])
-                        if value > 64:
-                            console.dim(speed["dim"])
-                        send_control_change(82, 64)
-                    if control == 83 and console: ## Drehregler 4
-                        if value < 64:
-                            console.shutter(-speed["shutter"])
-                        if value > 64:
-                            console.shutter(speed["shutter"])
-                        send_control_change(83, 64)
-                    ####PLATZ FÜR 5###
-                    if control == 85 and console: ## Drehregler 6
-                        if value < 64:
-                            console.encoder("colorrgb1", -speed["R"])
-                        if value > 64:
-                            console.encoder("colorrgb1", speed["R"])
-                        send_control_change(85, 64)
-                    if control == 86 and console:  ## Drehregler 7
-                        if value < 64:
-                            console.encoder("colorrgb2", -speed["G"])
-                        if value > 64:
-                            console.encoder("colorrgb2", speed["G"])
-                        send_control_change(86, 64)
-                    if control == 87 and console:  ## Drehregler 8
-                        if value < 64:
-                            console.encoder("colorrgb3", -speed["B"])
-                        if value > 64:
-                            console.encoder("colorrgb3", speed["B"])
-                        send_control_change(87, 64)
+                    if control >= 70 and control <= 77 and console:
+                        actions.fader(fader_values, console, control, value, last_fader_change, time)
 
-                    if control == 88 and console:  ## Großes Rad
-                        if value == 1:
-                            console.encoder("DIM", -5)
-                        if value == 65:
-                            console.encoder("DIM", 5)
-                        send_control_change(87, 64)
+                    if control >= 78 and control <= 88 and console:
+                        actionlist = {
+                            78: lambda: actions.special_master(console, value, send_note),
+                            79: lambda: actions.nothing(control=control),
+                            80: lambda: actions.wheel1(value, console, send_control_change, speed),
+                            81: lambda: actions.wheel2(value, console, send_control_change, speed),
+                            82: lambda: actions.wheel3(value, console, send_control_change, speed),
+                            83: lambda: actions.wheel4(value, console, send_control_change, speed),
+                            84: lambda: actions.nothing(control=control),
+                            85: lambda: actions.wheel6(value, console, send_control_change, speed),
+                            86: lambda: actions.wheel7(value, console, send_control_change, speed),
+                            87: lambda: actions.wheel8(value, console, send_control_change, speed),
+                            88: lambda: actions.big_wheel(value, console, send_control_change)
+                        }
+                        actionlist[control]()
 
                 if msg.type == "note_on":
                     note = msg.note
                     velocity = msg.velocity
                     if velocity == 127:
-                        for i in range(0, 8):
-                            if note == 8 + i and console:
-                                if work_buttons["store"]:
-                                    if button_types_100[i] == "":
-                                        console.command(f"Store Executor {page + 1}.{i + 101}")
-                                        continue
-                                    else:
-                                        messagebox.showerror(title="Speicherfehler", message="Nutze zum Speichern auf belegten Fadern die GUI")
-                                if button_types_100[i] == "Toggle":
-                                    if button1[i] != 127:
-                                        button1[i] = 127
-                                        console.command(f"Toggle Executor {page + 1}.{i + 101}")
-                                        send_note(note, 127)
-                                    else:
-                                        button1[i] = 0
-                                        console.command(f"Toggle Executor {page + 1}.{i + 101}")
-                                        send_note(note, 0)
-                                elif button_types_100[i] == "Flash":
-                                    button1[i] = 127
-                                    console.command(f"Flash Executor {page + 1}.{i + 101}")
-                                    send_note(note, 127)
-                                elif button_types_100[i] == "Temp":
-                                    button1[i] = 127
-                                    console.command(f"Temp Executor {page + 1}.{i + 101}")
-                                    send_note(note, 127)
-                                elif button_types_100[i] == "Go":
-                                    console.command(f"Go Executor {page + 1}.{i + 101}")
-                                elif button_types_100[i] == "GoBack":
-                                    console.command(f"GoBack Executor {page + 1}.{i + 101}")
-                                elif button_types_100[i] == "Pause":
-                                    console.command(f"Pause Executor {page + 1}.{i + 101}")
-                                elif button_types_100[i] == "Learn":
-                                    console.command(f"Learn Executor {page + 1}.{i + 101}")
-                                elif button_types_100[i] == "Select":
-                                    console.command(f"Select Executor {page + 1}.{i + 101}")
-                                elif button_types_100[i] == "Swop":
-                                    button1[i] = 127
-                                    console.command(f"Swop Executor {page + 1}.{i + 101}")
-                                    send_note(note, 127)
-                            elif note == 16 + i and console:
-                                if work_buttons["store"]:
-                                    if button_types_200[i] == "":
-                                        console.command(f"Store Executor {page + 1}.{i + 201}")
-                                        continue
-                                    else:
-                                        messagebox.showerror(title="Speicherfehler",
-                                                             message="Nutze zum Speichern auf belegten Fadern die GUI")
-                                if button_types_200[i] == "Toggle":
-                                    if button1[i] != 127:
-                                        button1[i] = 127
-                                        console.command(f"Toggle Executor {page + 1}.{i + 201}")
-                                        send_note(note, 127)
-                                    else:
-                                        button1[i] = 0
-                                        console.command(f"Toggle Executor {page + 1}.{i + 201}")
-                                        send_note(note, 0)
-                                elif button_types_200[i] == "Flash":
-                                    button1[i] = 127
-                                    console.command(f"Flash Executor {page + 1}.{i + 201}")
-                                    send_note(note, 127)
-                                elif button_types_200[i] == "Temp":
-                                    button1[i] = 127
-                                    console.command(f"Temp Executor {page + 1}.{i + 201}")
-                                    send_note(note, 127)
-                                elif button_types_200[i] == "Go":
-                                    console.command(f"Go Executor {page + 1}.{i + 201}")
-                                elif button_types_200[i] == "GoBack":
-                                    console.command(f"GoBack Executor {page + 1}.{i + 201}")
-                                elif button_types_200[i] == "Pause":
-                                    console.command(f"Pause Executor {page + 1}.{i + 201}")
-                                elif button_types_200[i] == "Learn":
-                                    console.command(f"Learn Executor {page + 1}.{i + 201}")
-                                elif button_types_200[i] == "Select":
-                                    console.command(f"Select Executor {page + 1}.{i + 201}")
-                                elif button_types_200[i] == "Swop":
-                                    button1[i] = 127
-                                    console.command(f"Swop Executor {page + 1}.{i + 201}")
-                                    send_note(note, 127)
-                            elif note == 32 + i and console: ## SELECT
-                                if button_types[i][1] == "Toggle":
-                                    if button1[i] != 127:
-                                        button1[i] = 127
-                                        console.command(f"Toggle Executor {page+1}.{i+1}")
-                                        send_note(note, 127)
-                                    else:
-                                        button1[i] = 0
-                                        console.command(f"Toggle Executor {page+1}.{i+1}")
-                                        send_note(note, 0)
-                                elif button_types[i][1] == "Flash":
-                                    button1[i] = 127
-                                    console.command(f"Flash Executor {page+1}.{i+1}")
-                                    send_note(note, 127)
-                                elif button_types[i][1] == "Temp":
-                                    button1[i] = 127
-                                    console.command(f"Temp Executor {page+1}.{i+1}")
-                                    send_note(note, 127)
-                                elif button_types[i][1] == "Go":
-                                    console.command(f"Go Executor {page+1}.{i+1}")
-                                elif button_types[i][1] == "GoBack":
-                                    console.command(f"GoBack Executor {page+1}.{i+1}")
-                                elif button_types[i][1] == "Pause":
-                                    console.command(f"Pause Executor {page+1}.{i+1}")
-                                elif button_types[i][1] == "Learn":
-                                    console.command(f"Learn Executor {page+1}.{i+1}")
-                                elif button_types[i][1] == "Select":
-                                    console.command(f"Select Executor {page+1}.{i+1}")
-                                elif button_types[i][1] == "Swop":
-                                    button1[i] = 127
-                                    console.command(f"Swop Executor {page+1}.{i+1}")
-                                    send_note(note, 127)
-                            elif note == 24 + i and console: ## SELECT
-                                if button_types[i][0] == "Toggle":
-                                    if button1[i] != 127:
-                                        button1[i] = 127
-                                        console.command(f"Toggle Executor {page+1}.{i+1}")
-                                        send_note(note, 127)
-                                    else:
-                                        button1[i] = 0
-                                        console.command(f"Toggle Executor {page+1}.{i+1}")
-                                        send_note(note, 0)
-                                elif button_types[i][0] == "Flash":
-                                    button1[i] = 127
-                                    console.command(f"Flash Executor {page+1}.{i+1}")
-                                    send_note(note, 127)
-                                elif button_types[i][0] == "Temp":
-                                    button1[i] = 127
-                                    console.command(f"Temp Executor {page+1}.{i+1}")
-                                    send_note(note, 127)
-                                elif button_types[i][0] == "Go":
-                                    console.command(f"Go Executor {page+1}.{i+1}")
-                                elif button_types[i][0] == "GoBack":
-                                    console.command(f"GoBack Executor {page+1}.{i+1}")
-                                elif button_types[i][0] == "Pause":
-                                    console.command(f"Pause Executor {page+1}.{i+1}")
-                                elif button_types[i][0] == "Learn":
-                                    console.command(f"Learn Executor {page+1}.{i+1}")
-                                elif button_types[i][0] == "Select":
-                                    console.command(f"Select Executor {page+1}.{i+1}")
-                                elif button_types[i][0] == "Swop":
-                                    button1[i] = 127
-                                    console.command(f"Swop Executor {page+1}.{i+1}")
-                                    send_note(note, 127)
-                            elif note == 58 + i and console:
-                                if not work_buttons["store"]:
-                                    console.command(f"Group {i+1}")
+                        if 8 <= note <= 15 and console:
+                            if work_buttons["store"]:
+                                if button_types_100[note - 8] == "":
+                                    console.command(f"Store Executor {page + 1}.{note - 8 + 101}")
+                                    continue
                                 else:
-                                    console.command(f"Store Group {i+1}")
-                                    work_buttons["store"] = False
-                                    send_note(work_buttons_code["store"], 0)
+                                    messagebox.showerror(title="Speicherfehler", message="Nutze zum Speichern auf belegten Fadern die GUI")
+                            if button_types_100[note - 8] == "Toggle":
+                                if button1[note - 8] != 127:
+                                    button1[note - 8] = 127
+                                    console.command(f"Toggle Executor {page + 1}.{note - 8 + 101}")
+                                    send_note(note, 127)
+                                else:
+                                    button1[note - 8] = 0
+                                    console.command(f"Toggle Executor {page + 1}.{note - 8 + 101}")
+                                    send_note(note, 0)
+                            elif button_types_100[note - 8] == "Flash":
+                                button1[note - 8] = 127
+                                console.command(f"Flash Executor {page + 1}.{note - 8 + 101}")
+                                send_note(note, 127)
+                            elif button_types_100[note - 8] == "Temp":
+                                button1[note - 8] = 127
+                                console.command(f"Temp Executor {page + 1}.{note - 8 + 101}")
+                                send_note(note, 127)
+                            elif button_types_100[note - 8] == "Go":
+                                console.command(f"Go Executor {page + 1}.{note - 8 + 101}")
+                            elif button_types_100[note - 8] == "GoBack":
+                                console.command(f"GoBack Executor {page + 1}.{note - 8 + 101}")
+                            elif button_types_100[note - 8] == "Pause":
+                                console.command(f"Pause Executor {page + 1}.{note - 8 + 101}")
+                            elif button_types_100[note - 8] == "Learn":
+                                console.command(f"Learn Executor {page + 1}.{note - 8 + 101}")
+                            elif button_types_100[note - 8] == "Select":
+                                console.command(f"Select Executor {page + 1}.{note - 8 + 101}")
+                            elif button_types_100[note - 8] == "Swop":
+                                button1[note - 8] = 127
+                                console.command(f"Swop Executor {page + 1}.{note - 8 + 101}")
+                                send_note(note, 127)
+                        elif 16 <= note <= 23 and console:
+                            if work_buttons["store"]:
+                                if button_types_200[note - 16] == "":
+                                    console.command(f"Store Executor {page + 1}.{note - 16 + 201}")
+                                    continue
+                                else:
+                                    messagebox.showerror(title="Speicherfehler",
+                                                         message="Nutze zum Speichern auf belegten Fadern die GUI")
+                            if button_types_200[note - 16] == "Toggle":
+                                if button1[note - 16] != 127:
+                                    button1[note - 16] = 127
+                                    console.command(f"Toggle Executor {page + 1}.{note - 16 + 201}")
+                                    send_note(note, 127)
+                                else:
+                                    button1[note - 16] = 0
+                                    console.command(f"Toggle Executor {page + 1}.{note - 16 + 201}")
+                                    send_note(note, 0)
+                            elif button_types_200[note - 16] == "Flash":
+                                button1[note - 16] = 127
+                                console.command(f"Flash Executor {page + 1}.{note - 16 + 201}")
+                                send_note(note, 127)
+                            elif button_types_200[note - 16] == "Temp":
+                                button1[note - 16] = 127
+                                console.command(f"Temp Executor {page + 1}.{note - 16 + 201}")
+                                send_note(note, 127)
+                            elif button_types_200[note - 16] == "Go":
+                                console.command(f"Go Executor {page + 1}.{note - 16 + 201}")
+                            elif button_types_200[note - 16] == "GoBack":
+                                console.command(f"GoBack Executor {page + 1}.{note - 16 + 201}")
+                            elif button_types_200[note - 16] == "Pause":
+                                console.command(f"Pause Executor {page + 1}.{note - 16 + 201}")
+                            elif button_types_200[note - 16] == "Learn":
+                                console.command(f"Learn Executor {page + 1}.{note - 16 + 201}")
+                            elif button_types_200[note - 16] == "Select":
+                                console.command(f"Select Executor {page + 1}.{note - 16 + 201}")
+                            elif button_types_200[note - 16] == "Swop":
+                                button1[note - 16] = 127
+                                console.command(f"Swop Executor {page + 1}.{note - 16 + 201}")
+                                send_note(note, 127)
+                        elif 32 <= note <= 39 and console: ## SELECT
+                            if button_types[note - 32][1] == "Toggle":
+                                if button1[note - 32] != 127:
+                                    button1[note - 32] = 127
+                                    console.command(f"Toggle Executor {page+1}.{note - 32+1}")
+                                    send_note(note, 127)
+                                else:
+                                    button1[note - 32] = 0
+                                    console.command(f"Toggle Executor {page+1}.{note - 32+1}")
+                                    send_note(note, 0)
+                            elif button_types[note - 32][1] == "Flash":
+                                button1[note - 32] = 127
+                                console.command(f"Flash Executor {page+1}.{note - 32 +1}")
+                                send_note(note, 127)
+                            elif button_types[note - 32][1] == "Temp":
+                                button1[note - 32] = 127
+                                console.command(f"Temp Executor {page+1}.{note - 32+1}")
+                                send_note(note, 127)
+                            elif button_types[note - 32][1] == "Go":
+                                console.command(f"Go Executor {page+1}.{note - 32+1}")
+                            elif button_types[note - 32][1] == "GoBack":
+                                console.command(f"GoBack Executor {page+1}.{note - 32+1}")
+                            elif button_types[note - 32][1] == "Pause":
+                                console.command(f"Pause Executor {page+1}.{note - 32+1}")
+                            elif button_types[note - 32][1] == "Learn":
+                                console.command(f"Learn Executor {page+1}.{note - 32+1}")
+                            elif button_types[note - 32][1] == "Select":
+                                console.command(f"Select Executor {page+1}.{note - 32+1}")
+                            elif button_types[note - 32][1] == "Swop":
+                                button1[note - 32] = 127
+                                console.command(f"Swop Executor {page+1}.{note - 32+1}")
+                                send_note(note, 127)
+                        elif 24 <= note <= 31 and console: ## SELECT
+                            if button_types[note - 24][0] == "Toggle":
+                                if button1[note - 24] != 127:
+                                    button1[note - 24] = 127
+                                    console.command(f"Toggle Executor {page+1}.{note - 24+1}")
+                                    send_note(note, 127)
+                                else:
+                                    button1[note - 24] = 0
+                                    console.command(f"Toggle Executor {page+1}.{note - 24+1}")
+                                    send_note(note, 0)
+                            elif button_types[note - 24][0] == "Flash":
+                                button1[note - 24] = 127
+                                console.command(f"Flash Executor {page+1}.{note - 24+1}")
+                                send_note(note, 127)
+                            elif button_types[note - 24][0] == "Temp":
+                                button1[note - 24] = 127
+                                console.command(f"Temp Executor {page+1}.{note - 24+1}")
+                                send_note(note, 127)
+                            elif button_types[note - 24][0] == "Go":
+                                console.command(f"Go Executor {page+1}.{note - 24+1}")
+                            elif button_types[note - 24][0] == "GoBack":
+                                console.command(f"GoBack Executor {page+1}.{note - 24+1}")
+                            elif button_types[note - 24][0] == "Pause":
+                                console.command(f"Pause Executor {page+1}.{note - 24+1}")
+                            elif button_types[note - 24][0] == "Learn":
+                                console.command(f"Learn Executor {page+1}.{note - 24+1}")
+                            elif button_types[note - 24][0] == "Select":
+                                console.command(f"Select Executor {page+1}.{note - 24+1}")
+                            elif button_types[note - 24][0] == "Swop":
+                                button1[note - 24] = 127
+                                console.command(f"Swop Executor {page+1}.{note - 24+1}")
+                                send_note(note, 127)
+                        elif 58 <= note <= 65 and console:
+                            if not work_buttons["store"]:
+                                console.command(f"Group {note-58+1}")
+                            else:
+                                console.command(f"Store Group {note-58+1}")
+                                work_buttons["store"] = False
+                                send_note(work_buttons_code["store"], 0)
                         ##Sonstige Tasten
-                        if note == 93 and console: ## Fader Bank >
+                        def nextpage():
+                            global page
                             page += 1
                             fill_displays()
-                        if note == 92 and console: ## Fader Bank <
+                        def prevpage():
+                            global page
                             if page > 0:
                                 page -= 1
                                 fill_displays()
-                        if note == 87 and console: ## <<
-                            console.command("GoBack")
-                        if note == 88 and console: ## >>
-                            console.command("Go")
-                        if note == 90 and console: ## |>
-                            console.command("Pause")
-                        if note == 71 and console: ## Save
-                            work_buttons["store"] = not work_buttons["store"]
-                            if work_buttons["store"]:
-                                send_note(note, 64)
-                                for i, v in work_buttons.items():
-                                    if not i == "store":
-                                        work_buttons[i] = False
+
+                        def wheel_button_little_speed(action):
+                            if speed[action] == 1:
+                                speed[action] = 10
                             else:
-                                send_note(note, 0)
-                        if note == 83 and console: ## Delete
-                            work_buttons["delete"] = not work_buttons["delete"]
-                            if work_buttons["delete"]:
-                                send_note(note, 64)
-                                for i, v in work_buttons.items():
-                                    if not i == "delete":
-                                        work_buttons[i] = False
+                                speed[action] = 1
+                        def wheel_button_large_speed(action):
+                            if speed[action] == 10:
+                                speed[action] = 20
                             else:
-                                send_note(note, 0)
-                        if note == 84 and console: ## Replace
-                            work_buttons["move"] = not work_buttons["move"]
-                            if work_buttons["move"]:
-                                multi_select_work_buttons["move"] = []
-                                send_note(note, 64)
-                                for i, v in work_buttons.items():
-                                    if not i == "move":
-                                        work_buttons[i] = False
-                            else:
-                                send_note(note, 0)
-                                multi_select_work_buttons["move"] = []
-                        if note == 78 and console: ## Cancel
+                                speed[action] = 10
+
+                        def clear():
+                            global clear
                             console.command("Clear")
                             clear = not clear
                             if clear:
                                 send_note(78, 64)
                             else:
                                 send_note(78, 0)
-                        if note == 72 and console: ## Undo
-                            console.command("Oops@")
-                        if note == 79 and console: ## Enter
-                            console.command("Please@")
-                        if note == 70 and console: ## Trim
-                            console.command("Fixture@")
-                        if note == 77 and console: ## Group
-                            console.command("Group@")
-                        if note == 94 and console: ## Channel <
-                            console.command("Previous")
-                        if note == 95 and console: ## Channel >
-                            console.command("Next")
-                        if note == 98 and console: ## Pfeiltaste <
-                            console.command("Previous")
-                        if note == 99 and console: ## Pfeiltaste >
-                            console.command("Next")
-                        if note == 96 and console: ## Pfeiltaste hoch
-                            console.command("Up")
-                        if note == 97 and console: ## Pfeiltaste runter
-                            console.command("Down")
-                        if note == 100 and console: ## Pfeiltaste mitte
-                            console.command("MAtricks Toggle")
-                        if note == 0 and console: ## Klick auf Drehregler 1
-                            if speed["pan"] == 1:
-                                speed["pan"] = 10
-                            else:
-                                speed["pan"] = 1
-                        if note == 1 and console: ## Klick auf Drehregler 2
-                            if speed["tilt"] == 1:
-                                speed["tilt"] = 10
-                            else:
-                                speed["tilt"] = 1
-                        if note == 2 and console: ## Klick auf Drehregler 3
-                            if speed["dim"] == 1:
-                                speed["dim"] = 10
-                            else:
-                                speed["dim"] = 1
-                        if note == 3 and console: ## Klick auf Drehregler 4
-                            if speed["shutter"] == 10:
-                                speed["shutter"] = 20
-                            else:
-                                speed["shutter"] = 10
-                        if note == 5 and console: ## Klick auf Drehregler 6
-                            if speed["R"] == 10:
-                                speed["R"] = 20
-                            else:
-                                speed["R"] = 10
-                        if note == 6 and console: ## Klick auf Drehregler 7
-                            if speed["G"] == 10:
-                                speed["G"] = 20
-                            else:
-                                speed["G"] = 10
-                        if note == 7 and console: ## Klick auf Drehregler 8
-                            if speed["B"] == 10:
-                                speed["B"] = 20
-                            else:
-                                speed["B"] = 10
-                        if note == 57 and console: ## FLIP
+
+                        def flip():
+                            global blackout
                             if blackout:
                                 console.specialmaster("2.1", "100")
                                 send_note(57, 0)
@@ -398,7 +276,8 @@ def read_midi_messages(console=None):
                                 send_note(57, 64)
                                 blackout = True
                                 send_control_change(78, 0)
-                        if note == 69 and console: ###WRITE
+
+                        def write():
                             work_buttons["select_for_lable"] = not work_buttons["select_for_lable"]
                             if work_buttons["select_for_lable"]:
                                 send_note(note, 64)
@@ -407,8 +286,49 @@ def read_midi_messages(console=None):
                                         work_buttons[i] = False
                             else:
                                 send_note(note, 0)
-                        if note in commands:
-                            console.command(commands[note])
+                        actionlist = {
+                            70: lambda: console.command("Fixture@"),
+                            71: lambda: actions.store(work_buttons, send_note, note),
+                            72: lambda: console.command("Oops@"),
+                            77: lambda: console.command("Group@"),
+                            78: lambda: clear(),
+                            79: lambda: console.command("Please@"),
+                            83: lambda: actions.delete(work_buttons, send_note, note),
+                            84: lambda: actions.replace(work_buttons, send_note, note, multi_select_work_buttons),
+                            87: lambda: console.command("GoBack"),
+                            88: lambda: console.command("Go"),
+                            90: lambda: console.command("Pause"),
+                            92: lambda: prevpage(),
+                            93: lambda: nextpage(),
+                            94: lambda: console.command("Previous"),
+                            95: lambda: console.command("Next"),
+                            96: lambda: console.command("Up"),
+                            97: lambda: console.command("Down"),
+                            98: lambda: console.command("Previous"),
+                            99: lambda: console.command("Next"),
+                            100: lambda: console.command("MAtricks Toggle"),
+                            0: lambda: wheel_button_little_speed("pan"),
+                            1: lambda: wheel_button_little_speed("tilt"),
+                            2: lambda: wheel_button_little_speed("dim"),
+                            3: lambda: wheel_button_little_speed("shutter"),
+                            5: lambda: wheel_button_large_speed("R"),
+                            6: lambda: wheel_button_large_speed("G"),
+                            7: lambda: wheel_button_large_speed("B"),
+                            40: lambda: console.command('PresetType "Dimmer"'),
+                            41: lambda: console.command('PresetType "Position"'),
+                            42: lambda: console.command('PresetType "Gobo"'),
+                            43: lambda: console.command('PresetType "Color"'),
+                            44: lambda: console.command('PresetType "Beam"'),
+                            45: lambda: console.command('PresetType "Control"'),
+                            57: lambda: flip(),
+                            69: lambda: write()
+                        }
+                        if note >= 0 and note <= 100 and console:
+                            if note in actionlist:
+                                actionlist[note]()
+                            else:
+                                actions.nothing(note=note)
+
                         if note >=110 and note <=117 and any(work_buttons.values()): ## Fader als Knopf
                             for i, v in work_buttons.items():
                                 if v:
@@ -440,67 +360,66 @@ def read_midi_messages(console=None):
                                             fill_displays()
                                             multi_select_work_buttons["move"] = []
                     elif velocity == 0:
-                        for i in range(0, 8):
-                            if note == 32 + i and console: ## SELECT
-                                if button_types[i][1] == "Flash":
-                                    button1[i] = 0
-                                    console.command(f"Flash Off Executor {page+1}.{i+1}")
-                                    send_note(note, 0)
-                                elif button_types[i][1] == "Temp":
-                                    button1[i] = 0
-                                    console.command(f"Temp Off Executor {page+1}.{i+1}")
-                                    send_note(note, 0)
-                                elif button_types[i][1] == "Swop":
-                                    button1[i] = 0
-                                    console.command(f"Swop Off Executor {page+1}.{i+1}")
-                                    send_note(note, 0)
-                            elif note == 24 + i and console: ## SELECT
-                                if work_buttons["store"]:
-                                    work_buttons["store"] = False
-                                    send_note(work_buttons_code["store"], 0)
-                                    continue
-                                if button_types[i][0] == "Flash":
-                                    button1[i] = 0
-                                    console.command(f"Flash Off Executor {page+1}.{i+1}")
-                                    send_note(note, 0)
-                                elif button_types[i][0] == "Temp":
-                                    button1[i] = 0
-                                    console.command(f"Temp Off Executor {page+1}.{i+1}")
-                                    send_note(note, 0)
-                                elif button_types[i][0] == "Swop":
-                                    button1[i] = 0
-                                    console.command(f"Swop Off Executor {page+1}.{i+1}")
-                                    send_note(note, 0)
-                            elif note == 8 + i and console: ## SELECT
-                                if work_buttons["store"]:
-                                    work_buttons["store"] = False
-                                    send_note(work_buttons_code["store"], 0)
-                                    continue
-                                if button_types_100[i] == "Flash":
-                                    button1[i] = 0
-                                    console.command(f"Flash Off Executor {page+1}.{i+101}")
-                                    send_note(note, 0)
-                                elif button_types_100[i] == "Temp":
-                                    button1[i] = 0
-                                    console.command(f"Temp Off Executor {page+1}.{i+101}")
-                                    send_note(note, 0)
-                                elif button_types_100[i] == "Swop":
-                                    button1[i] = 0
-                                    console.command(f"Swop Off Executor {page+1}.{i+101}")
-                                    send_note(note, 0)
-                            elif note == 16 + i and console: ## SELECT
-                                if button_types_200[i] == "Flash":
-                                    button1[i] = 0
-                                    console.command(f"Flash Off Executor {page+1}.{i+201}")
-                                    send_note(note, 0)
-                                elif button_types_200[i] == "Temp":
-                                    button1[i] = 0
-                                    console.command(f"Temp Off Executor {page+1}.{i+201}")
-                                    send_note(note, 0)
-                                elif button_types_200[i] == "Swop":
-                                    button1[i] = 0
-                                    console.command(f"Swop Off Executor {page+1}.{i+201}")
-                                    send_note(note, 0)
+                        if note >= 32 and note <= 39 and console: ## SELECT
+                            if button_types[note - 32][1] == "Flash":
+                                button1[note - 32] = 0
+                                console.command(f"Flash Off Executor {page+1}.{note - 32 +1}")
+                                send_note(note, 0)
+                            elif button_types[note - 32][1] == "Temp":
+                                button1[note - 32] = 0
+                                console.command(f"Temp Off Executor {page+1}.{note - 32 +1}")
+                                send_note(note, 0)
+                            elif button_types[note - 32][1] == "Swop":
+                                button1[note - 32] = 0
+                                console.command(f"Swop Off Executor {page+1}.{note - 32 +1}")
+                                send_note(note, 0)
+                        elif note >= 24 and note <= 31 and console: ## SELECT
+                            if work_buttons["store"]:
+                                work_buttons["store"] = False
+                                send_note(work_buttons_code["store"], 0)
+                                continue
+                            if button_types[note - 24][0] == "Flash":
+                                button1[note - 24] = 0
+                                console.command(f"Flash Off Executor {page+1}.{note - 24 +1}")
+                                send_note(note, 0)
+                            elif button_types[note - 24][0] == "Temp":
+                                button1[note - 24] = 0
+                                console.command(f"Temp Off Executor {page+1}.{note - 24 +1}")
+                                send_note(note, 0)
+                            elif button_types[note - 24][0] == "Swop":
+                                button1[note - 24] = 0
+                                console.command(f"Swop Off Executor {page+1}.{note - 24 +1}")
+                                send_note(note, 0)
+                        elif note >= 8 and note <= 15 and console: ## SELECT
+                            if work_buttons["store"]:
+                                work_buttons["store"] = False
+                                send_note(work_buttons_code["store"], 0)
+                                continue
+                            if button_types_100[note-8] == "Flash":
+                                button1[note-8] = 0
+                                console.command(f"Flash Off Executor {page+1}.{note-8+101}")
+                                send_note(note, 0)
+                            elif button_types_100[note-8] == "Temp":
+                                button1[note-8] = 0
+                                console.command(f"Temp Off Executor {page+1}.{note-8+101}")
+                                send_note(note, 0)
+                            elif button_types_100[note-8] == "Swop":
+                                button1[note-8] = 0
+                                console.command(f"Swop Off Executor {page+1}.{note-8+101}")
+                                send_note(note, 0)
+                        elif note >= 16 and note <= 23 and console: ## SELECT
+                            if button_types_200[note - 16] == "Flash":
+                                button1[note - 16] = 0
+                                console.command(f"Flash Off Executor {page+1}.{note - 16 +201}")
+                                send_note(note, 0)
+                            elif button_types_200[note - 16] == "Temp":
+                                button1[note - 16] = 0
+                                console.command(f"Temp Off Executor {page+1}.{note - 16 +201}")
+                                send_note(note, 0)
+                            elif button_types_200[note - 16] == "Swop":
+                                button1[note - 16] = 0
+                                console.command(f"Swop Off Executor {page+1}.{note - 16 +201}")
+                                send_note(note, 0)
     except Exception as e:
         print(f"1 Fehler beim Öffnen des Lese Ports: {e}")
 
