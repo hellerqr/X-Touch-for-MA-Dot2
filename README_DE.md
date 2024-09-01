@@ -72,6 +72,13 @@ Danke an den Förderverein des [Gymnasium Köln Pesch](https://gymnasium-koeln-p
 - **Cancel: Clear (Zweimal drücken, wie bei der Clear-Taste)**
 - **Undo: Oops**
 - **Enter: Please**
+- **Encoder Assign**
+  - Track: Dimmer Page
+  - Pan/Soundaround: Position Page
+  - EQ: Gobo Page
+  - Send: Color Page
+  - Plug-in: Beam Page
+  - Inst: Control Page
 
 # Einfache Fehlerbehebung
 

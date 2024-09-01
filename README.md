@@ -73,6 +73,13 @@ Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-k
 - **Cancel: Clear (Press twice like pressing the clear button twice)**
 - **Undo: Oops**
 - **Enter: Please**
+- **Encoder Assign**
+  - Track: Dimmer Page
+  - Pan/Soundaround: Position Page
+  - EQ: Gobo Page
+  - Send: Color Page
+  - Plug-in: Beam Page
+  - Inst: Control Page
 
 # Simple Bug Fixing
 
