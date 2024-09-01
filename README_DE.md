@@ -73,12 +73,12 @@ Danke an den Förderverein des [Gymnasium Köln Pesch](https://gymnasium-koeln-p
 - **Undo: Oops**
 - **Enter: Please**
 - **Encoder Assign**
-  - Track: Dimmer Page
-  - Pan/Soundaround: Position Page
-  - EQ: Gobo Page
-  - Send: Color Page
-  - Plug-in: Beam Page
-  - Inst: Control Page
+  - Track: Dimmer Seite
+  - Pan/Soundaround: Position Seite
+  - EQ: Gobo Seite
+  - Send: Color Seite
+  - Plug-in: Beam Seite
+  - Inst: Control Seite
 
 # Einfache Fehlerbehebung
 
