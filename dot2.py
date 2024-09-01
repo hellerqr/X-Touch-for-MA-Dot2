@@ -9,6 +9,7 @@ from tkinter import simpledialog, messagebox
 import os
 from midi import *
 import actions
+import atexit
 # Zustand der Tasten und Fader
 tasten = [False for _ in range(127)]
 fader_values = [0 for _ in range(8)]
@@ -37,6 +38,7 @@ blackout = False
 work_buttons = {"store": False, "select_for_lable": False, "delete": False, "move": False}
 work_buttons_code = {"store": 71, "select_for_lable": 69, "delete": 83, "move": 84}
 multi_select_work_buttons = {"move": []}
+midioutport = None
 if os.path.exists("colors.json"):
     with open('colors.json', 'r') as file:
         fader_color = json.load(file)
@@ -44,7 +46,13 @@ if os.path.exists("names.json"):
     with open('names.json', 'r') as file:
         fader_names = json.load(file)
 
-
+def close_port():
+    global midioutport
+    if midioutport:
+        print("Schließe den MIDI-Port...")
+        midioutport.close()
+        outport = None
+atexit.register(close_port)
 def read_midi_messages(console=None):
     global page
     global blackout
@@ -427,30 +435,30 @@ def read_midi_messages(console=None):
         print(f"1 Fehler beim Öffnen des Lese Ports: {e}")
 
 def send_note(note, velocity, channel=0):
+    global midioutport
     """Sendet eine Note."""
     try:
-        with mido.open_output(out_port) as outport:
-            msg = Message("note_on", note=note, velocity=velocity)
-            outport.send(msg)
+        msg = Message("note_on", note=note, velocity=velocity)
+        midioutport.send(msg)
     except Exception as e:
         print(f"2 Fehler beim Öffnen des Ports (Send Note): {e}")
         send_note(note, velocity, channel)
 def send_control_change(control, value, channel=0):
     """Sendet eine Control Change Nachricht an den angegebenen MIDI-Ausgangsport."""
+    global midioutport
     try:
-        with mido.open_output(out_port) as outport:
-            msg = Message('control_change', control=control, value=value, channel=channel)
-            outport.send(msg)
+        msg = Message('control_change', control=control, value=value, channel=channel)
+        midioutport.send(msg)
     except Exception as e:
         print(f"3 Fehler beim Öffnen des Ports (Send CC): {e}")
         send_control_change(control, value, channel)
 
 def send_sysex(sysex):
+    global midioutport
     try:
-        with mido.open_output(out_port) as outport:
-            msg = Message.from_bytes(sysex)
-            outport.send(msg)
-            time.sleep(0.02)
+        msg = Message.from_bytes(sysex)
+        midioutport.send(msg)
+        time.sleep(0.02)
     except Exception as e:
         print(f"4 Fehler beim Öffnen des Ports (Sende Sysex): {e}\tSysex: {sysex}")
 
@@ -685,7 +693,7 @@ class Dot2:
 
 
 def midi_connection_test():
-    global in_port, out_port
+    global in_port, out_port, midioutport
     midi_inputs = mido.get_input_names()
     midi_outputs = mido.get_output_names()
     for i in midi_inputs:
@@ -704,6 +712,14 @@ def midi_connection_test():
     else:
         print("Kein kompatibler Controller als Ausgabegerät gefunden")
         exit()
+    try:
+        if midioutport is None:
+            midioutport = mido.open_output(out_port)
+    except Exception as e:
+        print(f"Fehler beim Öffnen des Ports: {e}")
+        exit()
+
+
 def main():
     midi_connection_test()
     console = Dot2("127.0.0.1", "")
@@ -717,6 +733,7 @@ def main():
         while True:
             read_midi_messages(console)
     except KeyboardInterrupt:
+        close_port()
         console.ws.close()
 
 if __name__ == "__main__":
