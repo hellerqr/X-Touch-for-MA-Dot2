@@ -75,12 +75,6 @@ Danke an den Förderverein des [Gymnasium Köln Pesch](https://gymnasium-koeln-p
 
 # Einfache Fehlerbehebung
 
-## "X-Touch 1" oder "X-Touch 0" ist kein gültiger MIDI-Ein-/Ausgang
-
-Bitte führe `midi.py` aus und überprüfe die Bezeichnungen des Behringer X-Touch-Geräts. Ändere den Wert von `in_port` und `out_port` in Zeile 29 und 30 in `dot2.py`.
-
-## Sonstige Fehler
-
 - Bitte versuche, dein gesamtes System neu zu starten.
 - Erstelle ein Issue mit einem Screenshot und einer Beschreibung des Fehlers.
 

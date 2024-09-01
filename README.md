@@ -76,12 +76,6 @@ Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-k
 
 # Simple Bug Fixing
 
-## "X-Touch 1" or "X-Touch 0" is not a valid MIDI input/output
-
-Please run `midi.py` and check the labels of the Behringer X-Touch device. Change the value of "in_port" and "out_port" in `line 29` and `30` in `dot2.py`.
-
-## Any Other Error
-
 - Please try restarting your entire system.
 - Create an issue with a screenshot and a description of the error.
 
