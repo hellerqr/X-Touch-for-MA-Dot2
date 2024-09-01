@@ -24,6 +24,9 @@ button_types = [[] for _ in range(8)]
 button_types_100 = ["" for _ in range(8)]
 button_types_200 = ["" for _ in range(8)]
 last_msg = time.time()
+server_ready = False
+in_port = "X-Touch 0"
+out_port = "X-Touch 1"
 page = 0
 request = 0
 counter = 0
@@ -56,7 +59,7 @@ def read_midi_messages(console=None):
     global fader_color
     """Liest MIDI-Nachrichten vom angegebenen Port."""
     try:
-        with (mido.open_input("X-Touch 0") as inport):
+        with (mido.open_input(in_port) as inport):
             for msg in inport:
 
                 if msg.type == "control_change":
@@ -426,7 +429,7 @@ def read_midi_messages(console=None):
 def send_note(note, velocity, channel=0):
     """Sendet eine Note."""
     try:
-        with mido.open_output("X-Touch 1") as outport:
+        with mido.open_output(out_port) as outport:
             msg = Message("note_on", note=note, velocity=velocity)
             outport.send(msg)
     except Exception as e:
@@ -435,7 +438,7 @@ def send_note(note, velocity, channel=0):
 def send_control_change(control, value, channel=0):
     """Sendet eine Control Change Nachricht an den angegebenen MIDI-Ausgangsport."""
     try:
-        with mido.open_output("X-Touch 1") as outport:
+        with mido.open_output(out_port) as outport:
             msg = Message('control_change', control=control, value=value, channel=channel)
             outport.send(msg)
     except Exception as e:
@@ -444,14 +447,15 @@ def send_control_change(control, value, channel=0):
 
 def send_sysex(sysex):
     try:
-        with mido.open_output("X-Touch 1") as outport:
+        with mido.open_output(out_port) as outport:
             msg = Message.from_bytes(sysex)
             outport.send(msg)
+            time.sleep(0.02)
     except Exception as e:
         print(f"4 Fehler beim Öffnen des Ports (Sende Sysex): {e}\tSysex: {sysex}")
-        send_sysex(sysex)
 
 def time_to_sysex():
+    print("Uhrzeitanzeige gestartet!")
     def update_time():
         while True:
             # Get the current time
@@ -564,15 +568,17 @@ class Dot2:
         global counter
         global last_msg
         global request
+        global server_ready
         data = json.loads(message)
         request += 1
-        if request >= 9:
+        if request >= 9: #No idea what it does, but it's important not to touch it
             self.send({"session": self.session_id})
             self.send({"requestType": "getdata", "data": "set", "session": self.session_id, "maxRequests": 1})
             request = 0
         if "status" in data:
             if data["status"] == "server ready":
-                print(11111111)
+                print("Server ready")
+                server_ready = True
                 self.send({"session": 0, "maxRequests": 0})
 
         if "session" in data:
@@ -677,11 +683,31 @@ class Dot2:
         self.send({"requestType": "playbacks_userInput", "cmdline": "", "execIndex": button, "pageIndex": page, "buttonId": 0,
                    "pressed": True, "released": False, "type": 0, "session": self.session_id, "maxRequests": 0})
 
+
+def midi_connection_test():
+    global in_port, out_port
+    midi_inputs = mido.get_input_names()
+    midi_outputs = mido.get_output_names()
+    for i in midi_inputs:
+        if i.startswith('X-Touch'):
+            print("MIDI Input gefunden! Input device:", i)
+            in_port = i
+            break
+    else:
+        print("Kein kompatibler Controller als Eingabegerät gefunden")
+        exit()
+    for i in midi_outputs:
+        if i.startswith('X-Touch'):
+            print("MIDI Output gefunden! Output device:", i)
+            out_port = i
+            break
+    else:
+        print("Kein kompatibler Controller als Ausgabegerät gefunden")
+        exit()
 def main():
+    midi_connection_test()
     console = Dot2("127.0.0.1", "")
     console.connect()
-
-    # Warten bis die Verbindung hergestellt ist
     time.sleep(1)
     send_control_change(78, 127)
     console.specialmaster("2.1", "100")
