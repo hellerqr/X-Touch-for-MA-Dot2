@@ -44,8 +44,8 @@ Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-k
 - **Encoders:**
   - By clicking on the encoder, you can choose between two step sizes.
 - **Fader Bank:**
-  - `<`: Previous Page
-  - `>`: Next Page
+  - `<`: Page -
+  - `>`: Page +
 - **Channel:**
   - `<`: Previous
   - `>`: Next

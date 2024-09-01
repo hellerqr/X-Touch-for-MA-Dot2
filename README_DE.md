@@ -43,8 +43,8 @@ Danke an den Förderverein des [Gymnasium Köln Pesch](https://gymnasium-koeln-p
 - **Encoder:**
   - Durch Klicken auf den Encoder kann man zwischen zwei Schrittgrößen wählen.
 - **Faderbank:**
-  - `<`: Page +
-  - `>`: Page -
+  - `<`: Page -
+  - `>`: Page +
 - **Channel:**
   - `<`: Previous
   - `>`: Next
