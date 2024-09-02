@@ -338,7 +338,8 @@ def read_midi_messages(console=None):
                             if note in actionlist:
                                 actionlist[note]()
                             else:
-                                actions.nothing(note=note)
+                                if not 8 <= note <= 39 and not 58 <= note <= 65:
+                                    actions.nothing(note=note)
 
                         if note >=110 and note <=117 and any(work_buttons.values()): ## Fader als Knopf
                             for i, v in work_buttons.items():
