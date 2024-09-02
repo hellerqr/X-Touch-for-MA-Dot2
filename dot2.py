@@ -104,6 +104,11 @@ def read_midi_messages(console=None):
                                     continue
                                 else:
                                     messagebox.showerror(title="Speicherfehler", message="Nutze zum Speichern auf belegten Fadern die GUI")
+                            elif work_buttons["delete"]:
+                                console.command(f"Delete ExecButton2 {page + 1}.{note - 8 + 101}")
+                                work_buttons[i] = False
+                                send_note(work_buttons_code[i], 0)
+
                             if button_types_100[note - 8] == "Toggle":
                                 if button1[note - 8] != 127:
                                     button1[note - 8] = 127
@@ -143,6 +148,10 @@ def read_midi_messages(console=None):
                                 else:
                                     messagebox.showerror(title="Speicherfehler",
                                                          message="Nutze zum Speichern auf belegten Fadern die GUI")
+                            elif work_buttons["delete"]:
+                                console.command(f"Delete ExecButton2 {page + 1}.{note - 8 + 201}")
+                                work_buttons[i] = False
+                                send_note(work_buttons_code[i], 0)
                             if button_types_200[note - 16] == "Toggle":
                                 if button1[note - 16] != 127:
                                     button1[note - 16] = 127
