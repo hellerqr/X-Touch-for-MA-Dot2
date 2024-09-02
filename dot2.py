@@ -115,6 +115,20 @@ def read_midi_messages(console=None):
                                 console.command(f"Delete ExecButton2 {page + 1}.{note - 8 + 101}")
                                 work_buttons[i] = False
                                 send_note(work_buttons_code[i], 0)
+                            elif work_buttons["move"]:
+                                multi_select_work_buttons["move"].append([page + 1, note - 8 + 101])
+                                if len(multi_select_work_buttons["move"]) == 2:
+                                    work_buttons[i] = False
+                                    send_note(work_buttons_code[i], 0)
+                                    e1 = multi_select_work_buttons["move"][0]
+                                    e2 = multi_select_work_buttons["move"][1]
+                                    console.command(f"Move ExecButton2 {e1[0]}.{e1[1]} AT {e2[0]}.{e2[1]}")
+                                    fader_names[e2[0] - 1][e2[1] - 1], fader_names[e1[0] - 1][e1[1] - 1] = \
+                                        fader_names[e1[0] - 1][e1[1] - 1], fader_names[e2[0] - 1][e2[1] - 1]
+                                    fader_color[e2[0] - 1][e2[1] - 1], fader_color[e1[0] - 1][e1[1] - 1] = \
+                                        fader_color[e1[0] - 1][e1[1] - 1], fader_color[e2[0] - 1][e2[1] - 1]
+                                    fill_displays()
+                                    multi_select_work_buttons["move"] = []
 
                             if button_types_100[note - 8] == "Toggle":
                                 if button1[note - 8] != 127:
@@ -159,6 +173,20 @@ def read_midi_messages(console=None):
                                 console.command(f"Delete ExecButton2 {page + 1}.{note - 8 + 201}")
                                 work_buttons[i] = False
                                 send_note(work_buttons_code[i], 0)
+                            elif work_buttons["move"]:
+                                multi_select_work_buttons["move"].append([page + 1, note - 8 + 101])
+                                if len(multi_select_work_buttons["move"]) == 2:
+                                    work_buttons[i] = False
+                                    send_note(work_buttons_code[i], 0)
+                                    e1 = multi_select_work_buttons["move"][0]
+                                    e2 = multi_select_work_buttons["move"][1]
+                                    console.command(f"Move ExecButton2 {e1[0]}.{e1[1]} AT {e2[0]}.{e2[1]}")
+                                    fader_names[e2[0] - 1][e2[1] - 1], fader_names[e1[0] - 1][e1[1] - 1] = \
+                                        fader_names[e1[0] - 1][e1[1] - 1], fader_names[e2[0] - 1][e2[1] - 1]
+                                    fader_color[e2[0] - 1][e2[1] - 1], fader_color[e1[0] - 1][e1[1] - 1] = \
+                                        fader_color[e1[0] - 1][e1[1] - 1], fader_color[e2[0] - 1][e2[1] - 1]
+                                    fill_displays()
+                                    multi_select_work_buttons["move"] = []
                             if button_types_200[note - 16] == "Toggle":
                                 if button1[note - 16] != 127:
                                     button1[note - 16] = 127
