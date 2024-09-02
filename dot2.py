@@ -567,7 +567,7 @@ class Dot2:
                     "session": self.session_id,
                     "maxRequests": 1
                 })
-                time.sleep(0.1)  # Update alle 0.1 Sekunden
+                time.sleep(0.05)  # Update alle 0.1 Sekunden
 
         threading.Thread(target=update).start()
 
