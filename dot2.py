@@ -107,16 +107,15 @@ def read_midi_messages(console=None):
                             if work_buttons["store"]:
                                 if button_types_100[note - 8] == "":
                                     console.command(f"Store Executor {page + 1}.{note - 8 + 101}")
-                                    continue
                                 else:
                                     messagebox.showerror(title="Speicherfehler",
                                                          message="Nutze zum Speichern auf belegten Fadern die GUI")
-                                break
+                                continue
                             elif work_buttons["delete"]:
                                 console.command(f"Delete Executor {page + 1}.{note - 8 + 101}")
                                 work_buttons[i] = False
                                 send_note(work_buttons_code[i], 0)
-                                break
+                                continue
                             elif work_buttons["move"]:
                                 multi_select_work_buttons["move"].append([page + 1, note - 8 + 101])
                                 if len(multi_select_work_buttons["move"]) == 2:
@@ -131,7 +130,7 @@ def read_midi_messages(console=None):
                                         fader_color[e1[0] - 1][e1[1] - 1], fader_color[e2[0] - 1][e2[1] - 1]
                                     fill_displays()
                                     multi_select_work_buttons["move"] = []
-                                break
+                                continue
                             if button_types_100[note - 8] == "Toggle":
                                 if button1[note - 8] != 127:
                                     button1[note - 8] = 127
@@ -167,16 +166,15 @@ def read_midi_messages(console=None):
                             if work_buttons["store"]:
                                 if button_types_200[note - 16] == "":
                                     console.command(f"Store Executor {page + 1}.{note - 16 + 201}")
-                                    continue
                                 else:
                                     messagebox.showerror(title="Speicherfehler",
                                                          message="Nutze zum Speichern auf belegten Fadern die GUI")
-                                break
+                                continue
                             elif work_buttons["delete"]:
                                 console.command(f"Delete Executor {page + 1}.{note - 8 + 201}")
                                 work_buttons[i] = False
                                 send_note(work_buttons_code[i], 0)
-                                break
+                                continue
                             elif work_buttons["move"]:
                                 multi_select_work_buttons["move"].append([page + 1, note - 8 + 101])
                                 if len(multi_select_work_buttons["move"]) == 2:
@@ -191,7 +189,7 @@ def read_midi_messages(console=None):
                                         fader_color[e1[0] - 1][e1[1] - 1], fader_color[e2[0] - 1][e2[1] - 1]
                                     fill_displays()
                                     multi_select_work_buttons["move"] = []
-                                    break
+                                    continue
                             if button_types_200[note - 16] == "Toggle":
                                 if button1[note - 16] != 127:
                                     button1[note - 16] = 127
