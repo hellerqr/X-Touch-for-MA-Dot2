@@ -111,10 +111,12 @@ def read_midi_messages(console=None):
                                 else:
                                     messagebox.showerror(title="Speicherfehler",
                                                          message="Nutze zum Speichern auf belegten Fadern die GUI")
+                                break
                             elif work_buttons["delete"]:
                                 console.command(f"Delete Executor {page + 1}.{note - 8 + 101}")
                                 work_buttons[i] = False
                                 send_note(work_buttons_code[i], 0)
+                                break
                             elif work_buttons["move"]:
                                 multi_select_work_buttons["move"].append([page + 1, note - 8 + 101])
                                 if len(multi_select_work_buttons["move"]) == 2:
@@ -129,7 +131,7 @@ def read_midi_messages(console=None):
                                         fader_color[e1[0] - 1][e1[1] - 1], fader_color[e2[0] - 1][e2[1] - 1]
                                     fill_displays()
                                     multi_select_work_buttons["move"] = []
-
+                                break
                             if button_types_100[note - 8] == "Toggle":
                                 if button1[note - 8] != 127:
                                     button1[note - 8] = 127
@@ -169,10 +171,12 @@ def read_midi_messages(console=None):
                                 else:
                                     messagebox.showerror(title="Speicherfehler",
                                                          message="Nutze zum Speichern auf belegten Fadern die GUI")
+                                break
                             elif work_buttons["delete"]:
                                 console.command(f"Delete Executor {page + 1}.{note - 8 + 201}")
                                 work_buttons[i] = False
                                 send_note(work_buttons_code[i], 0)
+                                break
                             elif work_buttons["move"]:
                                 multi_select_work_buttons["move"].append([page + 1, note - 8 + 101])
                                 if len(multi_select_work_buttons["move"]) == 2:
@@ -187,6 +191,7 @@ def read_midi_messages(console=None):
                                         fader_color[e1[0] - 1][e1[1] - 1], fader_color[e2[0] - 1][e2[1] - 1]
                                     fill_displays()
                                     multi_select_work_buttons["move"] = []
+                                    break
                             if button_types_200[note - 16] == "Toggle":
                                 if button1[note - 16] != 127:
                                     button1[note - 16] = 127
@@ -406,11 +411,11 @@ def read_midi_messages(console=None):
                                             messagebox.showerror("Speicherfehler",
                                                                  "Zum Speichern belegter Fader bitte die GUI nutzen")
                                         else:
-                                            console.command(f"Store ExecButton2 {page + 1}.{note - 109}")
+                                            console.command(f"Store Executor {page + 1}.{note - 109}")
                                         work_buttons[i] = False
                                         send_note(work_buttons_code[i], 0)
                                     elif i == "delete":
-                                        console.command(f"Delete ExecButton2 {page + 1}.{note - 109}")
+                                        console.command(f"Delete Executor {page + 1}.{note - 109}")
                                         work_buttons[i] = False
                                         send_note(work_buttons_code[i], 0)
                                     elif i == "move":
@@ -420,7 +425,7 @@ def read_midi_messages(console=None):
                                             send_note(work_buttons_code[i], 0)
                                             e1 = multi_select_work_buttons["move"][0]
                                             e2 = multi_select_work_buttons["move"][1]
-                                            console.command(f"Move ExecButton2 {e1[0]}.{e1[1]} AT {e2[0]}.{e2[1]}")
+                                            console.command(f"Move Executor {e1[0]}.{e1[1]} AT {e2[0]}.{e2[1]}")
                                             fader_names[e2[0] - 1][e2[1] - 1], fader_names[e1[0] - 1][e1[1] - 1] = \
                                             fader_names[e1[0] - 1][e1[1] - 1], fader_names[e2[0] - 1][e2[1] - 1]
                                             fader_color[e2[0] - 1][e2[1] - 1], fader_color[e1[0] - 1][e1[1] - 1] = \
