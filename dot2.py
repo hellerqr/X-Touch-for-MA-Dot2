@@ -487,7 +487,7 @@ def time_to_sysex():
             segment_data = [segment_map[digit] for digit in current_time]
 
             global page
-            page_str = str(page).zfill(2)  # Ensure 'page' is two digits, adding leading zero if necessary
+            page_str = str(page+1).zfill(2)  # Ensure 'page' is two digits, adding leading zero if necessary
             page_segment_data = [segment_map[digit] for digit in page_str]
 
             # Add two empty segments at the beginning
