@@ -486,8 +486,12 @@ def time_to_sysex():
             # Convert time to segment data
             segment_data = [segment_map[digit] for digit in current_time]
 
+            global page
+            page_str = str(page).zfill(2)  # Ensure 'page' is two digits, adding leading zero if necessary
+            page_segment_data = [segment_map[digit] for digit in page_str]
+
             # Add two empty segments at the beginning
-            segment_data = [0, 0, 0] + segment_data
+            segment_data = page_segment_data + [0] + segment_data ###WHEN NOT WORKING: [0,0,0] + segment_data
 
             # Fill up segment data to 12 elements
             while len(segment_data) < 12:
