@@ -10,6 +10,7 @@ import os
 from midi import *
 import actions
 import atexit
+
 # Zustand der Tasten und Fader
 tasten = [False for _ in range(127)]
 fader_values = [0 for _ in range(8)]
@@ -21,7 +22,7 @@ button2 = [0 for _ in range(8)]
 speed = {"tilt": 1, "pan": 1, "dim": 1, "shutter": 1, "R": 10, "G": 10, "B": 10}
 speed_view = {"tilt": 80, "pan": 81, "dim": 82, "shutter": 83, "R": 85, "G": 86, "B": 87}
 fader_names = [["" for _ in range(8)] for _ in range(100)]
-fader_color = [[8 for _ in range(8)] for _ in range(100)] ### 7->normal 8->off
+fader_color = [[8 for _ in range(8)] for _ in range(100)]  ### 7->normal 8->off
 button_types = [[] for _ in range(8)]
 button_types_100 = ["" for _ in range(8)]
 button_types_200 = ["" for _ in range(8)]
@@ -47,13 +48,18 @@ if os.path.exists("names.json"):
     with open('names.json', 'r') as file:
         fader_names = json.load(file)
 
+
 def close_port():
     global midioutport
     if midioutport:
         print("Schließe den MIDI-Port...")
         midioutport.close()
         outport = None
+
+
 atexit.register(close_port)
+
+
 def read_midi_messages(console=None):
     global page
     global blackout
@@ -103,7 +109,8 @@ def read_midi_messages(console=None):
                                     console.command(f"Store Executor {page + 1}.{note - 8 + 101}")
                                     continue
                                 else:
-                                    messagebox.showerror(title="Speicherfehler", message="Nutze zum Speichern auf belegten Fadern die GUI")
+                                    messagebox.showerror(title="Speicherfehler",
+                                                         message="Nutze zum Speichern auf belegten Fadern die GUI")
                             elif work_buttons["delete"]:
                                 console.command(f"Delete ExecButton2 {page + 1}.{note - 8 + 101}")
                                 work_buttons[i] = False
@@ -183,82 +190,84 @@ def read_midi_messages(console=None):
                                 button1[note - 16] = 127
                                 console.command(f"Swop Executor {page + 1}.{note - 16 + 201}")
                                 send_note(note, 127)
-                        elif 32 <= note <= 39 and console: ## SELECT
+                        elif 32 <= note <= 39 and console:  ## SELECT
                             if button_types[note - 32][1] == "Toggle":
                                 if button1[note - 32] != 127:
                                     button1[note - 32] = 127
-                                    console.command(f"Toggle Executor {page+1}.{note - 32+1}")
+                                    console.command(f"Toggle Executor {page + 1}.{note - 32 + 1}")
                                     send_note(note, 127)
                                 else:
                                     button1[note - 32] = 0
-                                    console.command(f"Toggle Executor {page+1}.{note - 32+1}")
+                                    console.command(f"Toggle Executor {page + 1}.{note - 32 + 1}")
                                     send_note(note, 0)
                             elif button_types[note - 32][1] == "Flash":
                                 button1[note - 32] = 127
-                                console.command(f"Flash Executor {page+1}.{note - 32 +1}")
+                                console.command(f"Flash Executor {page + 1}.{note - 32 + 1}")
                                 send_note(note, 127)
                             elif button_types[note - 32][1] == "Temp":
                                 button1[note - 32] = 127
-                                console.command(f"Temp Executor {page+1}.{note - 32+1}")
+                                console.command(f"Temp Executor {page + 1}.{note - 32 + 1}")
                                 send_note(note, 127)
                             elif button_types[note - 32][1] == "Go":
-                                console.command(f"Go Executor {page+1}.{note - 32+1}")
+                                console.command(f"Go Executor {page + 1}.{note - 32 + 1}")
                             elif button_types[note - 32][1] == "GoBack":
-                                console.command(f"GoBack Executor {page+1}.{note - 32+1}")
+                                console.command(f"GoBack Executor {page + 1}.{note - 32 + 1}")
                             elif button_types[note - 32][1] == "Pause":
-                                console.command(f"Pause Executor {page+1}.{note - 32+1}")
+                                console.command(f"Pause Executor {page + 1}.{note - 32 + 1}")
                             elif button_types[note - 32][1] == "Learn":
-                                console.command(f"Learn Executor {page+1}.{note - 32+1}")
+                                console.command(f"Learn Executor {page + 1}.{note - 32 + 1}")
                             elif button_types[note - 32][1] == "Select":
-                                console.command(f"Select Executor {page+1}.{note - 32+1}")
+                                console.command(f"Select Executor {page + 1}.{note - 32 + 1}")
                             elif button_types[note - 32][1] == "Swop":
                                 button1[note - 32] = 127
-                                console.command(f"Swop Executor {page+1}.{note - 32+1}")
+                                console.command(f"Swop Executor {page + 1}.{note - 32 + 1}")
                                 send_note(note, 127)
-                        elif 24 <= note <= 31 and console: ## SELECT
+                        elif 24 <= note <= 31 and console:  ## SELECT
                             if button_types[note - 24][0] == "Toggle":
                                 if button1[note - 24] != 127:
                                     button1[note - 24] = 127
-                                    console.command(f"Toggle Executor {page+1}.{note - 24+1}")
+                                    console.command(f"Toggle Executor {page + 1}.{note - 24 + 1}")
                                     send_note(note, 127)
                                 else:
                                     button1[note - 24] = 0
-                                    console.command(f"Toggle Executor {page+1}.{note - 24+1}")
+                                    console.command(f"Toggle Executor {page + 1}.{note - 24 + 1}")
                                     send_note(note, 0)
                             elif button_types[note - 24][0] == "Flash":
                                 button1[note - 24] = 127
-                                console.command(f"Flash Executor {page+1}.{note - 24+1}")
+                                console.command(f"Flash Executor {page + 1}.{note - 24 + 1}")
                                 send_note(note, 127)
                             elif button_types[note - 24][0] == "Temp":
                                 button1[note - 24] = 127
-                                console.command(f"Temp Executor {page+1}.{note - 24+1}")
+                                console.command(f"Temp Executor {page + 1}.{note - 24 + 1}")
                                 send_note(note, 127)
                             elif button_types[note - 24][0] == "Go":
-                                console.command(f"Go Executor {page+1}.{note - 24+1}")
+                                console.command(f"Go Executor {page + 1}.{note - 24 + 1}")
                             elif button_types[note - 24][0] == "GoBack":
-                                console.command(f"GoBack Executor {page+1}.{note - 24+1}")
+                                console.command(f"GoBack Executor {page + 1}.{note - 24 + 1}")
                             elif button_types[note - 24][0] == "Pause":
-                                console.command(f"Pause Executor {page+1}.{note - 24+1}")
+                                console.command(f"Pause Executor {page + 1}.{note - 24 + 1}")
                             elif button_types[note - 24][0] == "Learn":
-                                console.command(f"Learn Executor {page+1}.{note - 24+1}")
+                                console.command(f"Learn Executor {page + 1}.{note - 24 + 1}")
                             elif button_types[note - 24][0] == "Select":
-                                console.command(f"Select Executor {page+1}.{note - 24+1}")
+                                console.command(f"Select Executor {page + 1}.{note - 24 + 1}")
                             elif button_types[note - 24][0] == "Swop":
                                 button1[note - 24] = 127
-                                console.command(f"Swop Executor {page+1}.{note - 24+1}")
+                                console.command(f"Swop Executor {page + 1}.{note - 24 + 1}")
                                 send_note(note, 127)
                         elif 58 <= note <= 65 and console:
                             if not work_buttons["store"]:
-                                console.command(f"Group {note-58+1}")
+                                console.command(f"Group {note - 58 + 1}")
                             else:
-                                console.command(f"Store Group {note-58+1}")
+                                console.command(f"Store Group {note - 58 + 1}")
                                 work_buttons["store"] = False
                                 send_note(work_buttons_code["store"], 0)
+
                         ##Sonstige Tasten
                         def nextpage():
                             global page
                             page += 1
                             fill_displays()
+
                         def prevpage():
                             global page
                             if page > 0:
@@ -272,6 +281,7 @@ def read_midi_messages(console=None):
                             else:
                                 speed[action] = 1
                                 send_control_change(speed_view[action], 0)
+
                         def wheel_button_large_speed(action):
                             if speed[action] == 10:
                                 speed[action] = 20
@@ -311,6 +321,7 @@ def read_midi_messages(console=None):
                                         work_buttons[i] = False
                             else:
                                 send_note(note, 0)
+
                         actionlist = {
                             70: lambda: console.command("Fixture@"),
                             71: lambda: actions.store(work_buttons, send_note, note),
@@ -355,16 +366,17 @@ def read_midi_messages(console=None):
                                 if not 8 <= note <= 39 and not 58 <= note <= 65:
                                     actions.nothing(note=note)
 
-                        if note >=110 and note <=117 and any(work_buttons.values()): ## Fader als Knopf
+                        if note >= 110 and note <= 117 and any(work_buttons.values()):  ## Fader als Knopf
                             for i, v in work_buttons.items():
                                 if v:
                                     if i == "select_for_lable":
-                                        get_name(page, note-110)
+                                        get_name(page, note - 110)
                                         work_buttons[i] = False
                                         send_note(work_buttons_code[i], 0)
                                     elif i == "store":
-                                        if fader_names[page][note-110] != "":
-                                            messagebox.showerror("Speicherfehler", "Zum Speichern belegter Fader bitte die GUI nutzen")
+                                        if fader_names[page][note - 110] != "":
+                                            messagebox.showerror("Speicherfehler",
+                                                                 "Zum Speichern belegter Fader bitte die GUI nutzen")
                                         else:
                                             console.command(f"Store ExecButton2 {page + 1}.{note - 109}")
                                         work_buttons[i] = False
@@ -374,80 +386,83 @@ def read_midi_messages(console=None):
                                         work_buttons[i] = False
                                         send_note(work_buttons_code[i], 0)
                                     elif i == "move":
-                                        multi_select_work_buttons["move"].append([page+1, note-109])
+                                        multi_select_work_buttons["move"].append([page + 1, note - 109])
                                         if len(multi_select_work_buttons["move"]) == 2:
                                             work_buttons[i] = False
                                             send_note(work_buttons_code[i], 0)
                                             e1 = multi_select_work_buttons["move"][0]
                                             e2 = multi_select_work_buttons["move"][1]
                                             console.command(f"Move ExecButton2 {e1[0]}.{e1[1]} AT {e2[0]}.{e2[1]}")
-                                            fader_names[e2[0]-1][e2[1]-1], fader_names[e1[0]-1][e1[1]-1] = fader_names[e1[0]-1][e1[1]-1], fader_names[e2[0]-1][e2[1]-1]
-                                            fader_color[e2[0]-1][e2[1]-1], fader_color[e1[0]-1][e1[1]-1] = fader_color[e1[0] - 1][e1[1] - 1], fader_color[e2[0]-1][e2[1]-1]
+                                            fader_names[e2[0] - 1][e2[1] - 1], fader_names[e1[0] - 1][e1[1] - 1] = \
+                                            fader_names[e1[0] - 1][e1[1] - 1], fader_names[e2[0] - 1][e2[1] - 1]
+                                            fader_color[e2[0] - 1][e2[1] - 1], fader_color[e1[0] - 1][e1[1] - 1] = \
+                                            fader_color[e1[0] - 1][e1[1] - 1], fader_color[e2[0] - 1][e2[1] - 1]
                                             fill_displays()
                                             multi_select_work_buttons["move"] = []
                     elif velocity == 0:
-                        if note >= 32 and note <= 39 and console: ## SELECT
+                        if note >= 32 and note <= 39 and console:  ## SELECT
                             if button_types[note - 32][1] == "Flash":
                                 button1[note - 32] = 0
-                                console.command(f"Flash Off Executor {page+1}.{note - 32 +1}")
+                                console.command(f"Flash Off Executor {page + 1}.{note - 32 + 1}")
                                 send_note(note, 0)
                             elif button_types[note - 32][1] == "Temp":
                                 button1[note - 32] = 0
-                                console.command(f"Temp Off Executor {page+1}.{note - 32 +1}")
+                                console.command(f"Temp Off Executor {page + 1}.{note - 32 + 1}")
                                 send_note(note, 0)
                             elif button_types[note - 32][1] == "Swop":
                                 button1[note - 32] = 0
-                                console.command(f"Swop Off Executor {page+1}.{note - 32 +1}")
+                                console.command(f"Swop Off Executor {page + 1}.{note - 32 + 1}")
                                 send_note(note, 0)
-                        elif note >= 24 and note <= 31 and console: ## SELECT
+                        elif note >= 24 and note <= 31 and console:  ## SELECT
                             if work_buttons["store"]:
                                 work_buttons["store"] = False
                                 send_note(work_buttons_code["store"], 0)
                                 continue
                             if button_types[note - 24][0] == "Flash":
                                 button1[note - 24] = 0
-                                console.command(f"Flash Off Executor {page+1}.{note - 24 +1}")
+                                console.command(f"Flash Off Executor {page + 1}.{note - 24 + 1}")
                                 send_note(note, 0)
                             elif button_types[note - 24][0] == "Temp":
                                 button1[note - 24] = 0
-                                console.command(f"Temp Off Executor {page+1}.{note - 24 +1}")
+                                console.command(f"Temp Off Executor {page + 1}.{note - 24 + 1}")
                                 send_note(note, 0)
                             elif button_types[note - 24][0] == "Swop":
                                 button1[note - 24] = 0
-                                console.command(f"Swop Off Executor {page+1}.{note - 24 +1}")
+                                console.command(f"Swop Off Executor {page + 1}.{note - 24 + 1}")
                                 send_note(note, 0)
-                        elif note >= 8 and note <= 15 and console: ## SELECT
+                        elif note >= 8 and note <= 15 and console:  ## SELECT
                             if work_buttons["store"]:
                                 work_buttons["store"] = False
                                 send_note(work_buttons_code["store"], 0)
                                 continue
-                            if button_types_100[note-8] == "Flash":
-                                button1[note-8] = 0
-                                console.command(f"Flash Off Executor {page+1}.{note-8+101}")
+                            if button_types_100[note - 8] == "Flash":
+                                button1[note - 8] = 0
+                                console.command(f"Flash Off Executor {page + 1}.{note - 8 + 101}")
                                 send_note(note, 0)
-                            elif button_types_100[note-8] == "Temp":
-                                button1[note-8] = 0
-                                console.command(f"Temp Off Executor {page+1}.{note-8+101}")
+                            elif button_types_100[note - 8] == "Temp":
+                                button1[note - 8] = 0
+                                console.command(f"Temp Off Executor {page + 1}.{note - 8 + 101}")
                                 send_note(note, 0)
-                            elif button_types_100[note-8] == "Swop":
-                                button1[note-8] = 0
-                                console.command(f"Swop Off Executor {page+1}.{note-8+101}")
+                            elif button_types_100[note - 8] == "Swop":
+                                button1[note - 8] = 0
+                                console.command(f"Swop Off Executor {page + 1}.{note - 8 + 101}")
                                 send_note(note, 0)
-                        elif note >= 16 and note <= 23 and console: ## SELECT
+                        elif note >= 16 and note <= 23 and console:  ## SELECT
                             if button_types_200[note - 16] == "Flash":
                                 button1[note - 16] = 0
-                                console.command(f"Flash Off Executor {page+1}.{note - 16 +201}")
+                                console.command(f"Flash Off Executor {page + 1}.{note - 16 + 201}")
                                 send_note(note, 0)
                             elif button_types_200[note - 16] == "Temp":
                                 button1[note - 16] = 0
-                                console.command(f"Temp Off Executor {page+1}.{note - 16 +201}")
+                                console.command(f"Temp Off Executor {page + 1}.{note - 16 + 201}")
                                 send_note(note, 0)
                             elif button_types_200[note - 16] == "Swop":
                                 button1[note - 16] = 0
-                                console.command(f"Swop Off Executor {page+1}.{note - 16 +201}")
+                                console.command(f"Swop Off Executor {page + 1}.{note - 16 + 201}")
                                 send_note(note, 0)
     except Exception as e:
         print(f"1 Fehler beim Öffnen des Lese Ports: {e}")
+
 
 def send_note(note, velocity, channel=0):
     global midioutport
@@ -458,6 +473,8 @@ def send_note(note, velocity, channel=0):
     except Exception as e:
         print(f"2 Fehler beim Öffnen des Ports (Send Note): {e}")
         send_note(note, velocity, channel)
+
+
 def send_control_change(control, value, channel=0):
     """Sendet eine Control Change Nachricht an den angegebenen MIDI-Ausgangsport."""
     global midioutport
@@ -468,6 +485,7 @@ def send_control_change(control, value, channel=0):
         print(f"3 Fehler beim Öffnen des Ports (Send CC): {e}")
         send_control_change(control, value, channel)
 
+
 def send_sysex(sysex):
     global midioutport
     try:
@@ -476,8 +494,10 @@ def send_sysex(sysex):
     except Exception as e:
         print(f"4 Fehler beim Öffnen des Ports (Sende Sysex): {e}\tSysex: {sysex}")
 
+
 def time_to_sysex():
     print("Uhrzeitanzeige gestartet!")
+
     def update_time():
         while True:
             # Get the current time
@@ -501,11 +521,11 @@ def time_to_sysex():
             segment_data = [segment_map[digit] for digit in current_time]
 
             global page
-            page_str = str(page+1).zfill(2)  # Ensure 'page' is two digits, adding leading zero if necessary
+            page_str = str(page + 1).zfill(2)  # Ensure 'page' is two digits, adding leading zero if necessary
             page_segment_data = [segment_map[digit] for digit in page_str]
 
             # Add two empty segments at the beginning
-            segment_data = page_segment_data + [0] + segment_data ###WHEN NOT WORKING: [0,0,0] + segment_data
+            segment_data = page_segment_data + [0] + segment_data  ###WHEN NOT WORKING: [0,0,0] + segment_data
 
             # Fill up segment data to 12 elements
             while len(segment_data) < 12:
@@ -520,7 +540,9 @@ def time_to_sysex():
             sysex_msg = [0xF0, 0x00, 0x20, 0x32, device_id, 0x37] + segment_data + [dots1, dots2] + [0xF7]
             send_sysex(sysex_msg)
             time.sleep(1)
+
     threading.Thread(target=update_time).start()
+
 
 def get_name(lpage, lnum):
     root = tk.Tk()
@@ -534,6 +556,7 @@ def get_name(lpage, lnum):
         json.dump(fader_color, file)
     fill_displays()
 
+
 def generate_sysex(text, lcd_number, backlight_color=7):
     device_id = 0x14
     lcd_number = lcd_number % 8
@@ -545,6 +568,7 @@ def generate_sysex(text, lcd_number, backlight_color=7):
     sysex.append(0xF7)
     return sysex
 
+
 def fill_displays():
     global page
     names = fader_names[page]
@@ -552,6 +576,7 @@ def fill_displays():
     for i, v in enumerate(names):
         sysex = generate_sysex(v, i, colors[i])
         send_sysex(sysex)
+
 
 class Dot2:
     def __init__(self, address: str, password: str):
@@ -597,7 +622,7 @@ class Dot2:
         global server_ready
         data = json.loads(message)
         request += 1
-        if request >= 9: #No idea what it does, but it's important not to touch it
+        if request >= 9:  #No idea what it does, but it's important not to touch it
             self.send({"session": self.session_id})
             self.send({"requestType": "getdata", "data": "set", "session": self.session_id, "maxRequests": 1})
             request = 0
@@ -620,7 +645,9 @@ class Dot2:
                 self.session_id = data["session"]
 
         if "forceLogin" in data:
-            self.send({"requestType": "login", "username": "remote", "password": self.password, "session": self.session_id, "maxRequests": 0})
+            self.send(
+                {"requestType": "login", "username": "remote", "password": self.password, "session": self.session_id,
+                 "maxRequests": 0})
 
         if "responseType" in data:
             if data["responseType"] == "login":
@@ -628,13 +655,14 @@ class Dot2:
                 self.start_update_interval()
             if data["responseType"] == "playbacks":
                 for i in range(8):
-                    new_value = int(data["itemGroups"][0]["items"][i][0]["executorBlocks"][0]["fader"]["v"]*127)
+                    new_value = int(data["itemGroups"][0]["items"][i][0]["executorBlocks"][0]["fader"]["v"] * 127)
                     if last_fader_change[i] + 0.5 < time.time():
                         if fader_values[i] != new_value:
                             send_control_change(70 + i, new_value)
                             fader_values[i] = new_value
                     is_emty = data["itemGroups"][0]["items"][i][0]["executorBlocks"][0]["fader"]["max"] == 0
-                    button_types[i] = [data["itemGroups"][0]["items"][i][0]["executorBlocks"][0]["button1"]["t"], data["itemGroups"][0]["items"][i][0]["executorBlocks"][0]["button2"]["t"]]
+                    button_types[i] = [data["itemGroups"][0]["items"][i][0]["executorBlocks"][0]["button1"]["t"],
+                                       data["itemGroups"][0]["items"][i][0]["executorBlocks"][0]["button2"]["t"]]
                     button_types_100[i] = data["itemGroups"][1]["items"][i][0]["executorBlocks"][0]["button1"]["t"]
                     button_types_200[i] = data["itemGroups"][2]["items"][i][0]["executorBlocks"][0]["button1"]["t"]
                     if is_emty:
@@ -648,12 +676,12 @@ class Dot2:
                             fader_color[page][i] = 7
                         fill_displays()
                 for i in range(8):
-                    new_value = int(data["itemGroups"][2]["items"][i][0]["isRun"]*127)
+                    new_value = int(data["itemGroups"][2]["items"][i][0]["isRun"] * 127)
                     if button_200[i] != new_value:
                         send_note(16 + i, new_value)
                         button_200[i] = new_value
                 for i in range(8):
-                    new_value = int(data["itemGroups"][1]["items"][i][0]["isRun"]*127)
+                    new_value = int(data["itemGroups"][1]["items"][i][0]["isRun"] * 127)
                     if button_100[i] != new_value:
                         send_note(8 + i, new_value)
                         button_100[i] = new_value
@@ -676,20 +704,22 @@ class Dot2:
     def send(self, payload: dict):
         self.ws.send(json.dumps(payload, separators=(',', ':')))
 
-
     def command(self, command):
         self.send({"requestType": "command", "command": command, "session": self.session_id, "maxRequests": 0})
 
     def pan(self, val):
         self.send({"requestType": "encoder", "name": "PAN", "value": val, "session": self.session_id, "maxRequests": 0})
+
     def tilt(self, val):
-        self.send({"requestType": "encoder", "name": "TILT", "value": val, "session": self.session_id, "maxRequests": 0})
+        self.send(
+            {"requestType": "encoder", "name": "TILT", "value": val, "session": self.session_id, "maxRequests": 0})
 
     def dim(self, val):
         self.send({"requestType": "encoder", "name": "DIM", "value": val, "session": self.session_id, "maxRequests": 0})
 
     def shutter(self, val):
-        self.send({"requestType": "encoder", "name": "Shutter", "value": val, "session": self.session_id, "maxRequests": 0})
+        self.send(
+            {"requestType": "encoder", "name": "Shutter", "value": val, "session": self.session_id, "maxRequests": 0})
 
     def encoder(self, name, val):
         self.send({"requestType": "encoder", "name": name, "value": val, "session": self.session_id,
@@ -706,8 +736,9 @@ class Dot2:
 
     def button(self, button):
         global page
-        self.send({"requestType": "playbacks_userInput", "cmdline": "", "execIndex": button, "pageIndex": page, "buttonId": 0,
-                   "pressed": True, "released": False, "type": 0, "session": self.session_id, "maxRequests": 0})
+        self.send(
+            {"requestType": "playbacks_userInput", "cmdline": "", "execIndex": button, "pageIndex": page, "buttonId": 0,
+             "pressed": True, "released": False, "type": 0, "session": self.session_id, "maxRequests": 0})
 
 
 def midi_connection_test():
@@ -753,6 +784,7 @@ def main():
     except KeyboardInterrupt:
         close_port()
         console.ws.close()
+
 
 if __name__ == "__main__":
     main()
