@@ -458,7 +458,6 @@ def send_sysex(sysex):
     try:
         msg = Message.from_bytes(sysex)
         midioutport.send(msg)
-        time.sleep(0.02)
     except Exception as e:
         print(f"4 Fehler beim Öffnen des Ports (Sende Sysex): {e}\tSysex: {sysex}")
 
