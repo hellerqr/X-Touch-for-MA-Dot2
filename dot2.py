@@ -105,7 +105,8 @@ def read_midi_messages(console=None):
                     if velocity == 127:
                         if 8 <= note <= 15 and console:
                             if work_buttons["store"]:
-                                if button_types_100[note - 8] == "":
+                                if button_types_100[note - 8 + 101] == "":
+                                    print(f"Store Executor {page + 1}.{note - 8 + 101}")
                                     console.command(f"Store Executor {page + 1}.{note - 8 + 101}")
                                 else:
                                     messagebox.showerror(title="Speicherfehler",
@@ -164,7 +165,7 @@ def read_midi_messages(console=None):
                                 send_note(note, 127)
                         elif 16 <= note <= 23 and console:
                             if work_buttons["store"]:
-                                if button_types_200[note - 16] == "":
+                                if button_types_200[note - 16 + 201] == "":
                                     console.command(f"Store Executor {page + 1}.{note - 16 + 201}")
                                 else:
                                     messagebox.showerror(title="Speicherfehler",
