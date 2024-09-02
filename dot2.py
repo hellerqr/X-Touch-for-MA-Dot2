@@ -582,7 +582,8 @@ def get_name(lpage, lnum):
     root.withdraw()  # Das Hauptfenster ausblenden
     name = simpledialog.askstring("Fader benennen", "Geben sie einen Namen für den Executer ein:")
     fader_names[lpage][lnum] = name
-    fader_color[lpage][lnum] = 7
+    if fader_color[lpage][lnum] % 8 == 0:
+        fader_color[lpage][lnum] = 7
     with open('names.json', 'w') as file:
         json.dump(fader_names, file)
     with open('colors.json', 'w') as file:
