@@ -3,63 +3,70 @@ def big_wheel(value, console, send_control_change):
         console.encoder("DIM", -5)
     if value == 65:
         console.encoder("DIM", 5)
-    send_control_change(87, 64)
 
 
-def wheel1(value, console, send_control_change, speed):
+def wheel1(value, console, send_control_change, speed, update):
     if value < 64:
         console.pan(-speed["pan"])
     if value > 64:
         console.pan(speed["pan"])
-    send_control_change(80, 64)
+    update("pan")
 
 
-def wheel2(value, console, send_control_change, speed):
+def wheel2(value, console, send_control_change, speed, update):
     if value < 64:
         console.tilt(-speed["tilt"])
     if value > 64:
         console.tilt(speed["tilt"])
-    send_control_change(81, 64)
+    update("tilt")
 
 
-def wheel3(value, console, send_control_change, speed):
+def wheel3(value, console, send_control_change, speed, update):
     if value < 64:
         console.dim(-speed["dim"])
     if value > 64:
         console.dim(speed["dim"])
-    send_control_change(82, 64)
+    update("dim")
 
 
-def wheel4(value, console, send_control_change, speed):
+def wheel4(value, console, send_control_change, speed, update):
     if value < 64:
         console.shutter(-speed["shutter"])
     if value > 64:
         console.shutter(speed["shutter"])
-    send_control_change(83, 64)
+    update("shutter")
 
 
-def wheel6(value, console, send_control_change, speed):
+def wheel5(value, console, send_control_change, speed, update):
+    if value < 64:
+        console.shutter(-speed["ZOOM"])
+    if value > 64:
+        console.shutter(speed["ZOOM"])
+    update("zoom")
+
+
+def wheel6(value, console, send_control_change, speed, update):
     if value < 64:
         console.encoder("colorrgb1", -speed["R"])
     if value > 64:
         console.encoder("colorrgb1", speed["R"])
-    send_control_change(85, 64)
+    update("R")
 
 
-def wheel7(value, console, send_control_change, speed):
+def wheel7(value, console, send_control_change, speed, update):
     if value < 64:
         console.encoder("colorrgb2", -speed["G"])
     if value > 64:
         console.encoder("colorrgb2", speed["G"])
-    send_control_change(86, 64)
+    update("G")
 
 
-def wheel8(value, console, send_control_change, speed):
+def wheel8(value, console, send_control_change, speed, update):
     if value < 64:
         console.encoder("colorrgb3", -speed["B"])
     if value > 64:
         console.encoder("colorrgb3", speed["B"])
-    send_control_change(87, 64)
+    update("B")
 
 
 def fader(fader_values, console, control, value, last_fader_change, time):
@@ -67,6 +74,7 @@ def fader(fader_values, console, control, value, last_fader_change, time):
         fader_values[control - 70] = value
         last_fader_change[control - 70] = time.time()
         console.fade(control - 70, value / 127)
+
 
 def special_master(console, value, send_note, master="2.1"):
     console.specialmaster(master, str(int((value / 127) * 100)))
@@ -77,11 +85,13 @@ def special_master(console, value, send_note, master="2.1"):
         blackout = False
         send_note(57, 0)
 
+
 def nothing(control=None, note=None):
     if control is None and note is not None:
         print("KEINE AKTION HINTERLEGT! NOTE:", note)
     if note is None and control is not None:
         print("KEINE AKTION HINTERLEGT! CONTROL:", control)
+
 
 def store(work_buttons, send_note, note):
     work_buttons["store"] = not work_buttons["store"]
@@ -93,6 +103,7 @@ def store(work_buttons, send_note, note):
     else:
         send_note(note, 0)
 
+
 def delete(work_buttons, send_note, note):
     work_buttons["delete"] = not work_buttons["delete"]
     if work_buttons["delete"]:
@@ -102,6 +113,7 @@ def delete(work_buttons, send_note, note):
                 work_buttons[i] = False
     else:
         send_note(note, 0)
+
 
 def replace(work_buttons, send_note, note, multi_select_work_buttons):
     work_buttons["move"] = not work_buttons["move"]
@@ -114,4 +126,3 @@ def replace(work_buttons, send_note, note, multi_select_work_buttons):
     else:
         send_note(note, 0)
         multi_select_work_buttons["move"] = []
-

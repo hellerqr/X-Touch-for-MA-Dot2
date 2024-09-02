@@ -19,7 +19,7 @@ button_100 = [0 for _ in range(8)]
 button_200 = [0 for _ in range(8)]
 button1 = [0 for _ in range(8)]
 button2 = [0 for _ in range(8)]
-speed = {"tilt": 1, "pan": 1, "dim": 1, "shutter": 1, "R": 10, "G": 10, "B": 10}
+speed = {"tilt": 1, "pan": 1, "dim": 1, "shutter": 1, "R": 10, "G": 10, "B": 10, "zoom": 1}
 speed_view = {"tilt": 80, "pan": 81, "dim": 82, "shutter": 83, "R": 85, "G": 86, "B": 87}
 fader_names = [["" for _ in range(8)] for _ in range(100)]
 fader_color = [[0 for _ in range(8)] for _ in range(100)]
@@ -83,18 +83,31 @@ def read_midi_messages(console=None):
                     if control >= 70 and control <= 77 and console:
                         actions.fader(fader_values, console, control, value, last_fader_change, time)
 
+                    def update_big(action):
+                        if speed[action] == 10:
+                            send_control_change(speed_view[action], 0)
+                        else:
+                            send_control_change(speed_view[action], 127)
+
+                    def update_small(action):
+                        if speed[action] == 1:
+                            send_control_change(speed_view[action], 0)
+                        else:
+                            send_control_change(speed_view[action], 127)
+
+
                     if control >= 78 and control <= 88 and console:
                         actionlist = {
                             78: lambda: actions.special_master(console, value, send_note),
                             79: lambda: actions.nothing(control=control),
-                            80: lambda: actions.wheel1(value, console, send_control_change, speed),
-                            81: lambda: actions.wheel2(value, console, send_control_change, speed),
-                            82: lambda: actions.wheel3(value, console, send_control_change, speed),
-                            83: lambda: actions.wheel4(value, console, send_control_change, speed),
-                            84: lambda: actions.nothing(control=control),
-                            85: lambda: actions.wheel6(value, console, send_control_change, speed),
-                            86: lambda: actions.wheel7(value, console, send_control_change, speed),
-                            87: lambda: actions.wheel8(value, console, send_control_change, speed),
+                            80: lambda: actions.wheel1(value, console, send_control_change, speed, update_small),
+                            81: lambda: actions.wheel2(value, console, send_control_change, speed, update_small),
+                            82: lambda: actions.wheel3(value, console, send_control_change, speed, update_small),
+                            83: lambda: actions.wheel4(value, console, send_control_change, speed, update_small),
+                            84: lambda: actions.wheel5(value, console, send_control_change, speed, update_small),
+                            85: lambda: actions.wheel6(value, console, send_control_change, speed, update_big),
+                            86: lambda: actions.wheel7(value, console, send_control_change, speed, update_big),
+                            87: lambda: actions.wheel8(value, console, send_control_change, speed, update_big),
                             88: lambda: actions.big_wheel(value, console, send_control_change)
                         }
                         actionlist[control]()
@@ -318,10 +331,10 @@ def read_midi_messages(console=None):
                         def wheel_button_large_speed(action):
                             if speed[action] == 10:
                                 speed[action] = 20
-                                send_control_change(speed_view[action], 0)
+                                send_control_change(speed_view[action], 127)
                             else:
                                 speed[action] = 10
-                                send_control_change(speed_view[action], 127)
+                                send_control_change(speed_view[action], 0)
 
                         def clear():
                             global clear
@@ -753,7 +766,7 @@ class Dot2:
 
     def shutter(self, val):
         self.send(
-            {"requestType": "encoder", "name": "Shutter", "value": val, "session": self.session_id, "maxRequests": 0})
+            {"requestType": "encoder", "name": "SHUTTER", "value": val, "session": self.session_id, "maxRequests": 0})
 
     def encoder(self, name, val):
         self.send({"requestType": "encoder", "name": name, "value": val, "session": self.session_id,
