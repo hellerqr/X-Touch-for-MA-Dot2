@@ -19,6 +19,7 @@ button_200 = [0 for _ in range(8)]
 button1 = [0 for _ in range(8)]
 button2 = [0 for _ in range(8)]
 speed = {"tilt": 1, "pan": 1, "dim": 1, "shutter": 1, "R": 10, "G": 10, "B": 10}
+speed_view = {"tilt": 80, "pan": 81, "dim": 82, "shutter": 83, "R": 85, "G": 86, "B": 87}
 fader_names = [["" for _ in range(8)] for _ in range(100)]
 fader_color = [[8 for _ in range(8)] for _ in range(100)] ### 7->normal 8->off
 button_types = [[] for _ in range(8)]
@@ -258,13 +259,17 @@ def read_midi_messages(console=None):
                         def wheel_button_little_speed(action):
                             if speed[action] == 1:
                                 speed[action] = 10
+                                send_control_change(speed_view[action], 127)
                             else:
                                 speed[action] = 1
+                                send_control_change(speed_view[action], 0)
                         def wheel_button_large_speed(action):
                             if speed[action] == 10:
                                 speed[action] = 20
+                                send_control_change(speed_view[action], 0)
                             else:
                                 speed[action] = 10
+                                send_control_change(speed_view[action], 127)
 
                         def clear():
                             global clear
