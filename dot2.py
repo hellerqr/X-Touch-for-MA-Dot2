@@ -105,6 +105,7 @@ def read_midi_messages(console=None):
                     if velocity == 127:
                         if 8 <= note <= 15 and console:
                             if work_buttons["store"]:
+                                print("STORE", button_types_100[note-8])
                                 if button_types_100[note - 8] == "":
                                     print(f"Store Executor {page + 1}.{note - 8 + 101}")
                                     console.command(f"Store Executor {page + 1}.{note - 8 + 101}")
