@@ -106,7 +106,7 @@ def read_midi_messages(console=None):
                         if 8 <= note <= 15 and console:
                             if work_buttons["store"]:
                                 print("STORE", button_types_100[note-8])
-                                if button_types_100[note - 8] == "":
+                                if button_types_100[note - 8] == "Leer":
                                     print(f"Store Executor {page + 1}.{note - 8 + 101}")
                                     console.command(f"Store Executor {page + 1}.{note - 8 + 101}")
                                 else:
@@ -166,7 +166,7 @@ def read_midi_messages(console=None):
                                 send_note(note, 127)
                         elif 16 <= note <= 23 and console:
                             if work_buttons["store"]:
-                                if button_types_200[note - 16] == "":
+                                if button_types_200[note - 16] == "Leer":
                                     console.command(f"Store Executor {page + 1}.{note - 16 + 201}")
                                 else:
                                     messagebox.showerror(title="Speicherfehler",
@@ -407,7 +407,7 @@ def read_midi_messages(console=None):
                                         work_buttons[i] = False
                                         send_note(work_buttons_code[i], 0)
                                     elif i == "store":
-                                        if fader_names[page][note - 110] != "":
+                                        if fader_names[page][note - 110] != "Leer":
                                             messagebox.showerror("Speicherfehler",
                                                                  "Zum Speichern belegter Fader bitte die GUI nutzen")
                                         else:
