@@ -112,7 +112,7 @@ def read_midi_messages(console=None):
                                     messagebox.showerror(title="Speicherfehler",
                                                          message="Nutze zum Speichern auf belegten Fadern die GUI")
                             elif work_buttons["delete"]:
-                                console.command(f"Delete ExecButton2 {page + 1}.{note - 8 + 101}")
+                                console.command(f"Delete ExecButton1 {page + 1}.{note - 8 + 101}")
                                 work_buttons[i] = False
                                 send_note(work_buttons_code[i], 0)
                             elif work_buttons["move"]:
@@ -122,7 +122,7 @@ def read_midi_messages(console=None):
                                     send_note(work_buttons_code[i], 0)
                                     e1 = multi_select_work_buttons["move"][0]
                                     e2 = multi_select_work_buttons["move"][1]
-                                    console.command(f"Move ExecButton2 {e1[0]}.{e1[1]} AT {e2[0]}.{e2[1]}")
+                                    console.command(f"Move ExecButton1 {e1[0]}.{e1[1]} AT {e2[0]}.{e2[1]}")
                                     fader_names[e2[0] - 1][e2[1] - 1], fader_names[e1[0] - 1][e1[1] - 1] = \
                                         fader_names[e1[0] - 1][e1[1] - 1], fader_names[e2[0] - 1][e2[1] - 1]
                                     fader_color[e2[0] - 1][e2[1] - 1], fader_color[e1[0] - 1][e1[1] - 1] = \
@@ -170,7 +170,7 @@ def read_midi_messages(console=None):
                                     messagebox.showerror(title="Speicherfehler",
                                                          message="Nutze zum Speichern auf belegten Fadern die GUI")
                             elif work_buttons["delete"]:
-                                console.command(f"Delete ExecButton2 {page + 1}.{note - 8 + 201}")
+                                console.command(f"Delete ExecButton1 {page + 1}.{note - 8 + 201}")
                                 work_buttons[i] = False
                                 send_note(work_buttons_code[i], 0)
                             elif work_buttons["move"]:
@@ -180,7 +180,7 @@ def read_midi_messages(console=None):
                                     send_note(work_buttons_code[i], 0)
                                     e1 = multi_select_work_buttons["move"][0]
                                     e2 = multi_select_work_buttons["move"][1]
-                                    console.command(f"Move ExecButton2 {e1[0]}.{e1[1]} AT {e2[0]}.{e2[1]}")
+                                    console.command(f"Move ExecButton1 {e1[0]}.{e1[1]} AT {e2[0]}.{e2[1]}")
                                     fader_names[e2[0] - 1][e2[1] - 1], fader_names[e1[0] - 1][e1[1] - 1] = \
                                         fader_names[e1[0] - 1][e1[1] - 1], fader_names[e2[0] - 1][e2[1] - 1]
                                     fader_color[e2[0] - 1][e2[1] - 1], fader_color[e1[0] - 1][e1[1] - 1] = \
