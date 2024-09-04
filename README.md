@@ -81,7 +81,7 @@ Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-k
   - EQ: Gobo Page
   - Send: Color Page
   - Plug-in: Beam Page
-  - Inst: Control Page
+  - Inst: Focus Page
 
 # Simple Bug Fixing
 

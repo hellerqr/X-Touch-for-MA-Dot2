@@ -80,7 +80,7 @@ Warnung: Nicht Seite 99 überschreiten
   - EQ: Gobo Seite
   - Send: Color Seite
   - Plug-in: Beam Seite
-  - Inst: Control Seite
+  - Inst: Fokus Seite
 
 # Einfache Fehlerbehebung
 

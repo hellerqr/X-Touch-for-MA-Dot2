@@ -423,7 +423,7 @@ def read_midi_messages(console=None):
                             42: lambda: console.command('PresetType "Gobo"'),
                             43: lambda: console.command('PresetType "Color"'),
                             44: lambda: console.command('PresetType "Beam"'),
-                            45: lambda: console.command('PresetType "Control"'),
+                            45: lambda: console.command('PresetType "focus"'),
                             57: lambda: flip(),
                             69: lambda: write(),
                             80: lambda: colorize()
