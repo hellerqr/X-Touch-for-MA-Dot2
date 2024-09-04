@@ -11,7 +11,6 @@ from midi import *
 import actions
 import atexit
 import unicodedata
-
 # Zustand der Tasten und Fader
 tasten = [False for _ in range(127)]
 fader_values = [0 for _ in range(8)]
@@ -672,49 +671,43 @@ def get_color(lpage, lnum):
     fill_displays()
 
 
-def replace_non_ascii(text):
-    # Dictionary to replace specific non-ASCII characters
+def generate_sysex(text, lcd_number, backlight_color=7):
+    # Mapping-Tabelle für spezielle Zeichen
     replacements = {
+        'ü': 'ue',
         'ä': 'ae',
         'ö': 'oe',
-        'ü': 'ue',
         'ß': 'ss',
+        'Ü': 'Ue',
         'Ä': 'Ae',
         'Ö': 'Oe',
-        'Ü': 'Ue',
+        # Weitere Mappings bei Bedarf
     }
 
-    # Normalize the text to NFD (decompose combined characters)
-    normalized_text = unicodedata.normalize('NFD', text)
+    # Ersetze spezielle Zeichen
+    for original, replacement in replacements.items():
+        text = text.replace(original, replacement)
 
-    # Replace or remove non-ASCII characters
-    ascii_text = ''
-    for char in normalized_text:
-        if char in replacements:
-            ascii_text += replacements[char]
-        elif ord(char) < 128:  # Check if character is ASCII
-            ascii_text += char
-        # Non-ASCII characters not in replacements are omitted
+    # Filtere nur gültige ASCII-Zeichen (im Bereich 0x20 bis 0x7E)
+    text = ''.join(char for char in text if 0x20 <= ord(char) <= 0x7E)
 
-    return ascii_text
+    # Text auf 14 Zeichen erweitern oder kürzen
+    ascii_chars = text.ljust(14, '\x00')[:14]
 
-def generate_sysex(device_id, lcd_number, backlight_color, text):
-    # Ensure the LCD number and backlight color are within the valid range
+    # Aufbau des SysEx-Datenpakets
+    device_id = 0x14
     lcd_number = lcd_number % 8
     backlight_color = backlight_color % 8
-
-    # Replace or remove invalid characters in the text
-    ascii_text = replace_non_ascii(text)
-
-    # Ensure the text is exactly 14 characters, padding with null bytes if necessary
-    ascii_chars = ascii_text.ljust(14, '\x00')[:14]
-
-    # Build the SysEx message
     sysex = [0xF0, 0x00, 0x20, 0x32, device_id, 0x4C, lcd_number, backlight_color]
+
+    # Umwandlung der Zeichen in ihre ASCII-Werte
     for char in ascii_chars:
         sysex.append(ord(char))
+
+    # Ende des SysEx-Datenpakets
     sysex.append(0xF7)
 
+    return sysex
 
 
 def fill_displays():
