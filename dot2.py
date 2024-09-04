@@ -130,7 +130,6 @@ def read_midi_messages(console=None):
                                 continue
                             elif work_buttons["delete"]:
                                 console.command(f"Delete Executor {page + 1}.{note - 8 + 101}")
-                                work_buttons[i] = False
                                 send_note(work_buttons_code["delete"], 0)
                                 work_buttons["delete"] = False
                                 continue
