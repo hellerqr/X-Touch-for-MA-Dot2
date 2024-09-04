@@ -120,9 +120,7 @@ def read_midi_messages(console=None):
                     if velocity == 127:
                         if 8 <= note <= 15 and console:
                             if work_buttons["store"]:
-                                print("STORE", button_types_100[note-8])
                                 if button_types_100[note - 8] == "Leer":
-                                    print(f"Store Executor {page + 1}.{note - 8 + 101}")
                                     console.command(f"Store Executor {page + 1}.{note - 8 + 101}")
                                 else:
                                     messagebox.showerror(title="Speicherfehler",
@@ -188,12 +186,12 @@ def read_midi_messages(console=None):
                                                          message="Nutze zum Speichern auf belegten Fadern die GUI")
                                 continue
                             elif work_buttons["delete"]:
-                                console.command(f"Delete Executor {page + 1}.{note - 8 + 201}")
+                                console.command(f"Delete Executor {page + 1}.{note - 16 + 201}")
                                 work_buttons[i] = False
                                 send_note(work_buttons_code[i], 0)
                                 continue
                             elif work_buttons["move"]:
-                                multi_select_work_buttons["move"].append([page + 1, note - 8 + 201])
+                                multi_select_work_buttons["move"].append([page + 1, note - 16 + 201])
                                 if len(multi_select_work_buttons["move"]) == 2:
                                     work_buttons[i] = False
                                     send_note(work_buttons_code[i], 0)
