@@ -664,7 +664,7 @@ def get_name(lpage, lnum):
 def get_color(lpage, lnum):
     root = tk.Tk()
     root.withdraw()  # Das Hauptfenster ausblenden
-    color = simpledialog.askstring("Fader färben", "Geben sie einen Wert für die Farbe ein:")
+    color = simpledialog.askstring("Fader färben", "Geben sie einen Wert für die Farbe ein (1-R, 2-G, 3-Y, 4-B, 5-M, 6-C, 7-W):")
     fader_color[lpage][lnum] = int(color)
     with open('colors.json', 'w') as file:
         json.dump(fader_color, file)
