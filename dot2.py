@@ -423,7 +423,7 @@ def read_midi_messages(console=None):
                                         work_buttons[i] = False
                                         send_note(work_buttons_code[i], 0)
                                     elif i == "store":
-                                        if fader_names[page][note - 110] != "Leer":
+                                        if fader_names[page][note - 110] != "":
                                             messagebox.showerror("Speicherfehler",
                                                                  "Zum Speichern belegter Fader bitte die GUI nutzen")
                                         else:
