@@ -45,6 +45,8 @@ Danke an den Förderverein des [Gymnasium Köln Pesch](https://gymnasium-koeln-p
 - **Faderbank:**
   - `<`: Page -
   - `>`: Page +
+
+Warnung: Nicht Seite 99 überschreiten
 - **Channel:**
   - `<`: Previous
   - `>`: Next
