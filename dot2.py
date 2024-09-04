@@ -37,8 +37,8 @@ clear = False
 store = False
 select_for_lable = False
 blackout = False
-work_buttons = {"store": False, "select_for_lable": False, "delete": False, "move": False}
-work_buttons_code = {"store": 71, "select_for_lable": 69, "delete": 83, "move": 84}
+work_buttons = {"store": False, "select_for_lable": False, "delete": False, "move": False, "select_for_colorize": False}
+work_buttons_code = {"store": 71, "select_for_lable": 69, "delete": 83, "move": 84, "select_for_colorize": 80}
 multi_select_work_buttons = {"move": []}
 midioutport = None
 if os.path.exists("colors.json"):
@@ -363,12 +363,22 @@ def read_midi_messages(console=None):
                         def write():
                             work_buttons["select_for_lable"] = not work_buttons["select_for_lable"]
                             if work_buttons["select_for_lable"]:
-                                send_note(note, 64)
+                                send_note(work_buttons_code["select_for_lable"], 64)
                                 for i, v in work_buttons.items():
                                     if not i == "select_for_lable":
                                         work_buttons[i] = False
                             else:
-                                send_note(note, 0)
+                                send_note(work_buttons_code["select_for_lable"], 0)
+
+                        def colorize():
+                            work_buttons["select_for_colorize"] = not work_buttons["select_for_colorize"]
+                            if work_buttons["select_for_colorize"]:
+                                send_note(work_buttons_code["select_for_colorize"], 64)
+                                for i, v in work_buttons.items():
+                                    if not i == "select_for_colorize":
+                                        work_buttons[i] = False
+                            else:
+                                send_note(work_buttons_code["select_for_colorize"], 0)
 
                         actionlist = {
                             70: lambda: console.command("Fixture@"),
@@ -406,7 +416,8 @@ def read_midi_messages(console=None):
                             44: lambda: console.command('PresetType "Beam"'),
                             45: lambda: console.command('PresetType "Control"'),
                             57: lambda: flip(),
-                            69: lambda: write()
+                            69: lambda: write(),
+                            80: lambda: colorize()
                         }
                         if note >= 0 and note <= 100 and console:
                             if note in actionlist:
@@ -646,6 +657,14 @@ def get_name(lpage, lnum):
         json.dump(fader_color, file)
     fill_displays()
 
+def get_color(lpage, lnum):
+    root = tk.Tk()
+    root.withdraw()  # Das Hauptfenster ausblenden
+    color = simpledialog.askstring("Fader färben", "Geben sie einen Wert für die Farbe ein:")
+    fader_color[lpage][lnum] = int(color)
+    with open('colors.json', 'w') as file:
+        json.dump(fader_color, file)
+    fill_displays()
 
 def generate_sysex(text, lcd_number, backlight_color=7):
     device_id = 0x14
