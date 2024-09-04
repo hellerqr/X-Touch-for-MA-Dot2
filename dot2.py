@@ -132,6 +132,8 @@ def read_midi_messages(console=None):
                                 console.command(f"Delete Executor {page + 1}.{note - 8 + 101}")
                                 work_buttons[i] = False
                                 send_note(work_buttons_code[i], 0)
+                                send_note(work_buttons_code["delete"], 0)
+                                work_buttons["delete"] = False
                                 continue
                             elif work_buttons["move"]:
                                 multi_select_work_buttons["move"].append([page + 1, note - 8 + 101])
@@ -192,7 +194,8 @@ def read_midi_messages(console=None):
                             elif work_buttons["delete"]:
                                 console.command(f"Delete Executor {page + 1}.{note - 16 + 201}")
                                 work_buttons[i] = False
-                                send_note(work_buttons_code[i], 0)
+                                send_note(work_buttons_code["delete"], 0)
+                                work_buttons["delete"] = False
                                 continue
                             elif work_buttons["move"]:
                                 multi_select_work_buttons["move"].append([page + 1, note - 16 + 201])
