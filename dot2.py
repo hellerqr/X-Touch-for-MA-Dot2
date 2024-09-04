@@ -433,6 +433,10 @@ def read_midi_messages(console=None):
                                         get_name(page, note - 110)
                                         work_buttons[i] = False
                                         send_note(work_buttons_code[i], 0)
+                                    elif i == "select_for_colorize":
+                                        get_color(page, note - 110)
+                                        work_buttons[i] = False
+                                        send_note(work_buttons_code[i], 0)
                                     elif i == "store":
                                         if fader_names[page][note - 110] != "":
                                             messagebox.showerror("Speicherfehler",
