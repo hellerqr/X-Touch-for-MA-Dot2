@@ -401,7 +401,6 @@ def read_midi_messages(console=None):
                             97: lambda: console.command("Down"),
                             98: lambda: console.command("Previous"),
                             99: lambda: console.command("Next"),
-                            100: lambda: console.command("MAtricks Toggle"),
                             0: lambda: wheel_button_little_speed("tilt"),
                             1: lambda: wheel_button_little_speed("pan"),
                             2: lambda: wheel_button_little_speed("dim"),
