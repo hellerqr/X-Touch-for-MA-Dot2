@@ -76,14 +76,6 @@ def fader(fader_values, console, control, value, last_fader_change, time):
         console.fade(control - 70, value / 127)
 
 
-def special_master(console, value, send_note, master="2.1"):
-    console.specialmaster(master, str(int((value / 127) * 100)))
-    if str(int((value / 127) * 100)) != "100":
-        send_note(57, 64)
-        blackout = True
-    else:
-        blackout = False
-        send_note(57, 0)
 
 
 def nothing(control=None, note=None):

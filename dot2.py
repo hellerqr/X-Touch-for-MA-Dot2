@@ -95,10 +95,19 @@ def read_midi_messages(console=None):
                         else:
                             send_control_change(speed_view[action], 127)
 
+                    def special_master(console, value, send_note, master="2.1"):
+                        global blackout
+                        console.specialmaster(master, str(int((value / 127) * 100)))
+                        if str(int((value / 127) * 100)) != "100":
+                            send_note(57, 64)
+                            blackout = True
+                        else:
+                            blackout = False
+                            send_note(57, 0)
 
                     if control >= 78 and control <= 88 and console:
                         actionlist = {
-                            78: lambda: actions.special_master(console, value, send_note),
+                            78: lambda: special_master(console, value, send_note),
                             79: lambda: actions.nothing(control=control),
                             80: lambda: actions.wheel1(value, console, send_control_change, speed, update_small),
                             81: lambda: actions.wheel2(value, console, send_control_change, speed, update_small),
