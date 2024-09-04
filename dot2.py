@@ -391,6 +391,7 @@ def read_midi_messages(console=None):
                             84: lambda: actions.replace(work_buttons, send_note, note, multi_select_work_buttons),
                             87: lambda: console.command("GoBack"),
                             88: lambda: console.command("Go"),
+                            89: lambda: console.command("off"),
                             90: lambda: console.command("Pause"),
                             92: lambda: prevpage(),
                             93: lambda: nextpage(),
