@@ -47,7 +47,7 @@ Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-k
   - `<`: Page -
   - `>`: Page +
 
-  Warning: Dont go past page 99
+  Warning: Don't go past page 99
 - **Channel:**
   - `<`: Previous
   - `>`: Next
