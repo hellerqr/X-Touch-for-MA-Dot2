@@ -7,6 +7,8 @@ from mido import Message
 import tkinter as tk
 from tkinter import simpledialog, messagebox
 import os
+
+import dot2
 from midi import *
 import actions
 import atexit
@@ -389,10 +391,11 @@ def read_midi_messages(console=None):
                             98: lambda: console.command("Previous"),
                             99: lambda: console.command("Next"),
                             100: lambda: console.command("MAtricks Toggle"),
-                            0: lambda: wheel_button_little_speed("pan"),
-                            1: lambda: wheel_button_little_speed("tilt"),
+                            0: lambda: wheel_button_little_speed("tilt"),
+                            1: lambda: wheel_button_little_speed("pan"),
                             2: lambda: wheel_button_little_speed("dim"),
                             3: lambda: wheel_button_little_speed("shutter"),
+                            4: lambda: wheel_button_little_speed("zoom"),
                             5: lambda: wheel_button_large_speed("R"),
                             6: lambda: wheel_button_large_speed("G"),
                             7: lambda: wheel_button_large_speed("B"),

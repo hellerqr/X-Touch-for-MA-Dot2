@@ -6,65 +6,65 @@ def big_wheel(value, console, send_control_change):
 
 
 def wheel1(value, console, send_control_change, speed, update):
-    if value < 64:
+    if value == 1:
         console.pan(-speed["pan"])
-    if value > 64:
+    if value == 65:
         console.pan(speed["pan"])
     update("pan")
 
 
 def wheel2(value, console, send_control_change, speed, update):
-    if value < 64:
+    if value == 1:
         console.tilt(-speed["tilt"])
-    if value > 64:
+    if value == 65:
         console.tilt(speed["tilt"])
     update("tilt")
 
 
 def wheel3(value, console, send_control_change, speed, update):
-    if value < 64:
+    if value == 1:
         console.dim(-speed["dim"])
-    if value > 64:
+    if value == 65:
         console.dim(speed["dim"])
     update("dim")
 
 
 def wheel4(value, console, send_control_change, speed, update):
-    if value < 64:
+    if value == 1:
         console.shutter(-speed["shutter"])
-    if value > 64:
+    if value == 65:
         console.shutter(speed["shutter"])
     update("shutter")
 
 
 def wheel5(value, console, send_control_change, speed, update):
-    if value < 64:
+    if value == 1:
         console.shutter(-speed["ZOOM"])
-    if value > 64:
+    if value == 65:
         console.shutter(speed["ZOOM"])
     update("zoom")
 
 
 def wheel6(value, console, send_control_change, speed, update):
-    if value < 64:
+    if value == 1:
         console.encoder("colorrgb1", -speed["R"])
-    if value > 64:
+    if value == 65:
         console.encoder("colorrgb1", speed["R"])
     update("R")
 
 
 def wheel7(value, console, send_control_change, speed, update):
-    if value < 64:
+    if value == 1:
         console.encoder("colorrgb2", -speed["G"])
-    if value > 64:
+    if value == 65:
         console.encoder("colorrgb2", speed["G"])
     update("G")
 
 
 def wheel8(value, console, send_control_change, speed, update):
-    if value < 64:
+    if value == 1:
         console.encoder("colorrgb3", -speed["B"])
-    if value > 64:
+    if value == 65:
         console.encoder("colorrgb3", speed["B"])
     update("B")
 
