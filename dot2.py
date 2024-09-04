@@ -7,8 +7,6 @@ from mido import Message
 import tkinter as tk
 from tkinter import simpledialog, messagebox
 import os
-
-import dot2
 from midi import *
 import actions
 import atexit
@@ -316,13 +314,13 @@ def read_midi_messages(console=None):
                         def nextpage():
                             global page
                             page += 1
-                            fill_displays()
+                            page_update()
 
                         def prevpage():
                             global page
                             if page > 0:
                                 page -= 1
-                                fill_displays()
+                                page_update()
 
                         def wheel_button_little_speed(action):
                             if speed[action] == 1:
@@ -545,6 +543,46 @@ def send_sysex(sysex):
     except Exception as e:
         print(f"4 Fehler beim Öffnen des Ports (Sende Sysex): {e}\tSysex: {sysex}")
 
+def page_update():
+    # Get the current time
+    current_time = time.strftime('%H%M%S')
+
+    # Define segment map for 7-segment display (0-9)
+    segment_map = {
+        '0': 0b0111111,
+        '1': 0b0000110,
+        '2': 0b1011011,
+        '3': 0b1001111,
+        '4': 0b1100110,
+        '5': 0b1101101,
+        '6': 0b1111101,
+        '7': 0b0000111,
+        '8': 0b1111111,
+        '9': 0b1101111
+    }
+
+    # Convert time to segment data
+    segment_data = [segment_map[digit] for digit in current_time]
+
+    global page
+    page_str = str(page + 1).zfill(2)  # Ensure 'page' is two digits, adding leading zero if necessary
+    page_segment_data = [segment_map[digit] for digit in page_str]
+
+    # Add two empty segments at the beginning
+    segment_data = page_segment_data + [0] + segment_data  ###WHEN NOT WORKING: [0,0,0] + segment_data
+
+    # Fill up segment data to 12 elements
+    while len(segment_data) < 12:
+        segment_data.append(0)
+
+    # Determine dot positions
+    dots1 = 0b000000  # For displays 1 to 7
+    dots2 = 0b000000  # For displays 8 to 12
+
+    # Create the SysEx message
+    device_id = 0x14  # Assuming X-Touch
+    sysex_msg = [0xF0, 0x00, 0x20, 0x32, device_id, 0x37] + segment_data + [dots1, dots2] + [0xF7]
+    send_sysex(sysex_msg)
 
 def time_to_sysex():
     print("Uhrzeitanzeige gestartet!")
