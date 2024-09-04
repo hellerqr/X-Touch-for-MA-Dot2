@@ -10,6 +10,7 @@ import os
 from midi import *
 import actions
 import atexit
+import unicodedata
 
 # Zustand der Tasten und Fader
 tasten = [False for _ in range(127)]
@@ -670,16 +671,50 @@ def get_color(lpage, lnum):
         json.dump(fader_color, file)
     fill_displays()
 
-def generate_sysex(text, lcd_number, backlight_color=7):
-    device_id = 0x14
+
+def replace_non_ascii(text):
+    # Dictionary to replace specific non-ASCII characters
+    replacements = {
+        'ä': 'ae',
+        'ö': 'oe',
+        'ü': 'ue',
+        'ß': 'ss',
+        'Ä': 'Ae',
+        'Ö': 'Oe',
+        'Ü': 'Ue',
+    }
+
+    # Normalize the text to NFD (decompose combined characters)
+    normalized_text = unicodedata.normalize('NFD', text)
+
+    # Replace or remove non-ASCII characters
+    ascii_text = ''
+    for char in normalized_text:
+        if char in replacements:
+            ascii_text += replacements[char]
+        elif ord(char) < 128:  # Check if character is ASCII
+            ascii_text += char
+        # Non-ASCII characters not in replacements are omitted
+
+    return ascii_text
+
+def generate_sysex(device_id, lcd_number, backlight_color, text):
+    # Ensure the LCD number and backlight color are within the valid range
     lcd_number = lcd_number % 8
     backlight_color = backlight_color % 8
-    ascii_chars = text.ljust(14, '\x00')[:14]
+
+    # Replace or remove invalid characters in the text
+    ascii_text = replace_non_ascii(text)
+
+    # Ensure the text is exactly 14 characters, padding with null bytes if necessary
+    ascii_chars = ascii_text.ljust(14, '\x00')[:14]
+
+    # Build the SysEx message
     sysex = [0xF0, 0x00, 0x20, 0x32, device_id, 0x4C, lcd_number, backlight_color]
     for char in ascii_chars:
         sysex.append(ord(char))
     sysex.append(0xF7)
-    return sysex
+
 
 
 def fill_displays():
