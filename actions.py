@@ -39,9 +39,9 @@ def wheel4(value, console, send_control_change, speed, update):
 
 def wheel5(value, console, send_control_change, speed, update):
     if value == 1:
-        console.encoder("zoom", -speed["ZOOM"])
+        console.encoder("zoom", -speed["zoom"])
     if value == 65:
-        console.encoder("zoom", speed["ZOOM"])
+        console.encoder("zoom", speed["zoom"])
     update("zoom")
 
 
