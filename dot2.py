@@ -643,7 +643,7 @@ def time_to_sysex():
             device_id = 0x14  # Assuming X-Touch
             sysex_msg = [0xF0, 0x00, 0x20, 0x32, device_id, 0x37] + segment_data + [dots1, dots2] + [0xF7]
             send_sysex(sysex_msg)
-            time.sleep(0.9)
+            time.sleep(0.8)
 
     threading.Thread(target=update_time).start()
 
