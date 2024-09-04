@@ -206,7 +206,7 @@ def read_midi_messages(console=None):
                                         fader_color[e1[0] - 1][e1[1] - 1], fader_color[e2[0] - 1][e2[1] - 1]
                                     fill_displays()
                                     multi_select_work_buttons["move"] = []
-                                    continue
+                                continue
                             if button_types_200[note - 16] == "Toggle":
                                 if button1[note - 16] != 127:
                                     button1[note - 16] = 127
