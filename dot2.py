@@ -136,7 +136,7 @@ def read_midi_messages(console=None):
                             elif work_buttons["move"]:
                                 multi_select_work_buttons["move"].append([page + 1, note - 8 + 101])
                                 if len(multi_select_work_buttons["move"]) == 2:
-                                    work_buttons[i] = False
+                                    work_buttons["move"] = False
                                     send_note(work_buttons_code["move"], 0)
                                     e1 = multi_select_work_buttons["move"][0]
                                     e2 = multi_select_work_buttons["move"][1]
@@ -197,7 +197,7 @@ def read_midi_messages(console=None):
                             elif work_buttons["move"]:
                                 multi_select_work_buttons["move"].append([page + 1, note - 16 + 201])
                                 if len(multi_select_work_buttons["move"]) == 2:
-                                    work_buttons[i] = False
+                                    work_buttons["move"] = False
                                     send_note(work_buttons_code["move"], 0)
                                     e1 = multi_select_work_buttons["move"][0]
                                     e2 = multi_select_work_buttons["move"][1]
