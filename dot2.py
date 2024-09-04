@@ -812,7 +812,7 @@ class Dot2:
 
     def shutter(self, val):
         self.send(
-            {"requestType": "encoder", "name": "SHUTTER", "value": val, "session": self.session_id, "maxRequests": 0})
+            {"requestType": "encoder", "name": "strobeintensity", "value": val, "session": self.session_id, "maxRequests": 0})
 
     def encoder(self, name, val):
         self.send({"requestType": "encoder", "name": name, "value": val, "session": self.session_id,
