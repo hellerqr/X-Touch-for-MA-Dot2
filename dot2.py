@@ -726,20 +726,23 @@ class Dot2:
                             fader_color[page][i] = 7
                         fill_displays()
                 for i in range(8):
-                    new_value = int(data["itemGroups"][2]["items"][i][0]["isRun"] * 127)
+                    """new_value = int(data["itemGroups"][2]["items"][i][0]["isRun"] * 127)
                     if button_200[i] != new_value:
                         send_note(16 + i, new_value)
-                        button_200[i] = new_value
+                        button_200[i] = new_value"""
+                    send_note(16+i, int(data["itemGroups"][2]["items"][i][0]["isRun"] * 127))
                 for i in range(8):
-                    new_value = int(data["itemGroups"][1]["items"][i][0]["isRun"] * 127)
+                    """new_value = int(data["itemGroups"][1]["items"][i][0]["isRun"] * 127)
                     if button_100[i] != new_value:
                         send_note(8 + i, new_value)
-                        button_100[i] = new_value
+                        button_100[i] = new_value"""
+                    send_note(8 + i, int(data["itemGroups"][1]["items"][i][0]["isRun"] * 127))
                 for i in range(8):
-                    new_value = int(data["itemGroups"][0]["items"][i][0]["isRun"] * 127)
+                    """new_value = int(data["itemGroups"][0]["items"][i][0]["isRun"] * 127)
                     if button1[i] != new_value:
                         send_note(32 + i, new_value)
-                        button1[i] = new_value
+                        button1[i] = new_value"""
+                    send_note(32 + i, int(data["itemGroups"][0]["items"][i][0]["isRun"] * 127))
 
     def on_error(self, ws, error):
         print(f"5 Fehler: {error}")
