@@ -61,6 +61,11 @@ Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-k
 - **Write: Label**
   - Click on "Write".
   - Place your finger on the fader you want to name.
+  - Use the GUI to type in a label
+- **Marker: Colorize**
+  - Click on "Marker"
+  - - Place your finger on the fader you want to name.
+  - Use the GUI to choose a color
 - **Save: Store**
   - Place your finger on the fader you want to save to **OR**
   - Select a button from F1 to F8 to save selected lamps to a group.
