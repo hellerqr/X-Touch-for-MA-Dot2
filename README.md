@@ -64,7 +64,7 @@ Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-k
   - Use the GUI to type in a label
 - **Marker: Colorize**
   - Click on "Marker"
-  - - Place your finger on the fader you want to name.
+  - Place your finger on the fader you want to colorize.
   - Use the GUI to choose a color
 - **Save: Store**
   - Place your finger on the fader you want to save to **OR**
