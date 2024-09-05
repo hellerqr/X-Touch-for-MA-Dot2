@@ -60,6 +60,11 @@ Warnung: Nicht Seite 99 überschreiten
 - **Write: Beschriften**
   - Auf "Write" klicken.
   - Finger auf den zu beschriftenden Fader legen.
+  - Die GUI benutzen um ein Label einzugeben.
+- - **Marker: Färben**
+  - Auf "Marker" klicken.
+  - Finger auf den zu färbenden Fader legen.
+  - Die GUI benutzen um eine Farbe zu wählen.
 - **Save: Speichern**
   - Finger auf den Fader legen, auf dem gespeichert werden soll **ODER**
   - Eine Taste von F1 bis F8 auswählen, um die ausgewählten Lampen zu einer Gruppe zu speichern.
