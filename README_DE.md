@@ -19,7 +19,8 @@ Danke an den Förderverein des [Gymnasium Köln Pesch](https://gymnasium-koeln-p
 - Encoder 1: PAN
 - Encoder 2: Tilt
 - Encoder 3: Dimmer
-- Encoder 4 & 5: Derzeit ungenutzt
+- Encoder 4: Fokus
+- Encoder 5: Shutter
 - Encoder 6: Rot
 - Encoder 7: Grün
 - Encoder 8: Blau
