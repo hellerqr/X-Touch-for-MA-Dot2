@@ -20,7 +20,8 @@ Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-k
 - Encoder 1: PAN
 - Encoder 2: Tilt
 - Encoder 3: Dimmer
-- Encoder 4 & 5: Currently unused
+- Encoder 4: Fokus
+- Encoder 5: Shutter
 - Encoder 6: Red
 - Encoder 7: Green
 - Encoder 8: Blue
