@@ -61,7 +61,7 @@ Warnung: Nicht Seite 99 überschreiten
   - Auf "Write" klicken.
   - Finger auf den zu beschriftenden Fader legen.
   - Die GUI benutzen um ein Label einzugeben.
-- - **Marker: Färben**
+- **Marker: Färben**
   - Auf "Marker" klicken.
   - Finger auf den zu färbenden Fader legen.
   - Die GUI benutzen um eine Farbe zu wählen.
