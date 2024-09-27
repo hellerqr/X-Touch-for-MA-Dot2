@@ -7,13 +7,13 @@ Thanks to [Linus Groschke](https://github.com/linusgke) for the software [pyMAdo
 
 Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-koeln-pesch.de/) for covering the acquisition costs of the Behringer X-Touch for use in the "AG für Veranstaltungstechnik".
 
-# How to Make the Software Ready for Operation
+# How to make the software ready for operation
 
 1. Connect the Behringer X-Touch via USB.
 2. Start `Dot2 on pc`.
 3. Start `dot2.py`.
 
-# Functions of the Software
+# Functions of the software
 
 ## Encoders
 
@@ -89,11 +89,11 @@ Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-k
   - Plug-in: Beam Page
   - Inst: Focus Page
 
-# Simple Bug Fixing
+# Simple bug fixing
 
 - Please try restarting your entire system.
 - Create an issue with a screenshot and a description of the error.
 
-# Want to Use Another Button?
+# Want to use another button?
 
 Create an issue with the note of the button and describe the desired function.
