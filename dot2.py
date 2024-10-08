@@ -661,6 +661,8 @@ def get_name(lpage, lnum):
     root = tk.Tk()
     root.withdraw()  # Das Hauptfenster ausblenden
     name = simpledialog.askstring("Fader benennen", "Geben sie einen Namen für den Executer ein:")
+    if name is None:
+        name = "unnamed"
     fader_names[lpage][lnum] = name
     if fader_color[lpage][lnum] % 8 == 0:
         fader_color[lpage][lnum] = 7
@@ -674,6 +676,8 @@ def get_color(lpage, lnum):
     root = tk.Tk()
     root.withdraw()  # Das Hauptfenster ausblenden
     color = simpledialog.askstring("Fader färben", "Geben sie einen Wert für die Farbe ein (1-R, 2-G, 3-Y, 4-B, 5-M, 6-C, 7-W):")
+    if color is None:
+        color = "7"
     fader_color[lpage][lnum] = int(color)%8
     with open('colors.json', 'w') as file:
         json.dump(fader_color, file)
