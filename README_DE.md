@@ -93,6 +93,7 @@ Warnung: Nicht Seite 99 überschreiten
 
 - Bitte versuche, dein gesamtes System neu zu starten.
 - Erstelle ein Issue mit einem Screenshot und einer Beschreibung des Fehlers.
+- Bitte versichere dich, dass der Controler im Modul "CtrlRel USB" ist.
 
 # Möchtest du eine andere Taste verwenden?
 
