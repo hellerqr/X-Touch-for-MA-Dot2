@@ -94,6 +94,7 @@ Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-k
 
 - Please try restarting your entire system.
 - Create an issue with a screenshot and a description of the error.
+- Please make sure that the controller is in the “CtrlRel USB” module.
 
 # Want to use another button?
 
