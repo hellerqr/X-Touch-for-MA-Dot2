@@ -9,8 +9,9 @@ Danke an den Förderverein des [Gymnasium Köln Pesch](https://gymnasium-koeln-p
 # Inbetriebnahme der Software
 
 1. Behringer X-Touch via USB anschließen.
-2. Dot2 auf dem PC starten.
-3. `dot2.py` starten.
+2. Den Controller im Modus CtrlRel USB starten.  
+3. Dot2 auf dem PC starten.
+4. `dot2.py` starten.
 
 # Funktionen der Software
 
