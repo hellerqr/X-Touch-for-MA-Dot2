@@ -10,8 +10,9 @@ Thanks to the support association of [Gymnasium Köln Pesch](https://gymnasium-k
 # How to make the software ready for operation
 
 1. Connect the Behringer X-Touch via USB.
-2. Start `Dot2 on pc`.
-3. Start `dot2.py`.
+2. Start the controller in the mode CtrlRel USB. 
+3. Start `Dot2 on pc`.
+4. Start `dot2.py`.
 
 # Functions of the software
 
